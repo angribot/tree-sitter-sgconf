@@ -29,8 +29,10 @@ fn main() {
     }
 
     let parser_path = src_dir.join("parser.c");
-    c_config.file(&parser_path);
+    let scanner_path = src_dir.join("scanner.c");
+    c_config.file(&parser_path).file(&scanner_path);
     println!("cargo:rerun-if-changed={}", parser_path.display());
+    println!("cargo:rerun-if-changed={}", scanner_path.display());
 
     c_config.compile("tree-sitter-sgconf");
 }

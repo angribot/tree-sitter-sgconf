@@ -229,7 +229,21 @@ AND,((DOMAIN,a),(DOMAIN,b)),DIRECT
         value: (bare_value))
       option: (positional_value
         value: (bare_value)))
-    (unknown_line)))
+    (logical_rule
+      condition: (logical_rule_expression
+        operator: (logical_operator)
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value))))
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value)))))
+      policy: (policy
+        value: (bare_value)))))
 
 ====================================================
 inline rulesets are ordered comma statements
@@ -418,9 +432,9 @@ FINAL,DIRECT
   (general_section
     (section_header)
     (assignment
-      key: (key))
-    (ERROR
-      (unknown_line))
+      key: (key)
+      value: (double_quoted_value
+        (MISSING """)))
     (assignment
       key: (key)
       value: (bare_value)))

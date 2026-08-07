@@ -138,17 +138,19 @@ opaque = value
 ---
 
 (source_file
-  (directive)
+  (module_name_directive
+    value: (bare_value))
   (comment)
   (comment)
   (comment)
   (general_section
     (section_header)
     (comment)
-    (directive)
+    (include_directive
+      target: (include_target))
     (assignment
-      (key)
-      (bare_value))))
+      key: (key)
+      value: (bare_value))))
 
 =================================
 malformed content does not consume the next section
@@ -207,7 +209,8 @@ FINAL,DIRECT
 ---
 
 (source_file
-  (ERROR)
+  (ERROR
+    (unknown_line))
   (rule_section
     (section_header)
     (rule
@@ -250,7 +253,9 @@ FINAL,DIRECT
 (source_file
   (general_section
     (section_header))
-  (ERROR)
+  (ERROR
+    (requirement_bare_value)
+    (requirement_bare_value))
   (rule_section
     (section_header)
     (rule

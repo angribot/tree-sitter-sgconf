@@ -1,0 +1,353 @@
+====================================================
+line requirements wrap prefix and suffix statements
+====================================================
+
+[General]
+#!REQUIREMENT CORE_VERSION>=6008000 modern = true
+legacy = true //!REQUIREMENT CORE_VERSION<6008000
+#!REQUIREMENT "SYSTEM=='macOS' AND SYSTEM_VERSION BEGINSWITH 'Version 15'" desktop = true
+platform = mac #!MACOS-ONLY
+#!IOS-ONLY mobile = true
+[Proxy]
+Group = direct //!REQUIREMENT DEVICE_MODEL MATCHES 'Mac.*'
+[Rule]
+DOMAIN,example.com,DIRECT //!REQUIREMENT LANGUAGE=='en-US'
+
+---
+
+(source_file
+  (general_section
+    (section_header)
+    (conditional_statement
+      condition: (requirement_prefix
+        expression: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (requirement_number))))
+      body: (assignment
+        key: (key)
+        value: (bare_value)))
+    (conditional_statement
+      body: (assignment
+        key: (key)
+        value: (bare_value))
+      condition: (requirement_suffix
+        expression: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (requirement_number)))))
+    (conditional_statement
+      condition: (requirement_prefix
+        expression: (quoted_requirement_expression
+          expression: (requirement_binary_expression
+            left: (requirement_predicate
+              variable: (requirement_variable)
+              operator: (requirement_operator)
+              value: (requirement_value
+                (single_quoted_value)))
+            operator: (requirement_operator)
+            right: (requirement_predicate
+              variable: (requirement_variable)
+              operator: (requirement_operator)
+              value: (requirement_value
+                (single_quoted_value))))))
+      body: (assignment
+        key: (key)
+        value: (bare_value)))
+    (conditional_statement
+      body: (assignment
+        key: (key)
+        value: (bare_value))
+      condition: (platform_requirement_suffix))
+    (conditional_statement
+      condition: (platform_requirement_prefix)
+      body: (assignment
+        key: (key)
+        value: (bare_value))))
+  (proxy_section
+    (section_header)
+    (conditional_statement
+      body: (named_declaration
+        name: (declaration_name)
+        argument: (positional_value
+          value: (bare_value)))
+      condition: (requirement_suffix
+        expression: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (single_quoted_value))))))
+  (rule_section
+    (section_header)
+    (conditional_statement
+      body: (rule
+        kind: (rule_kind)
+        argument: (positional_value
+          value: (bare_value))
+        policy: (policy
+          value: (bare_value)))
+      condition: (requirement_suffix
+        expression: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (single_quoted_value)))))))
+
+========================================================
+requirement expressions expose operators and precedence
+========================================================
+
+#!requirement=CORE_VERSION=1 OR CORE_VERSION==2 || CORE_VERSION>=3 AND CORE_VERSION=>4 && CORE_VERSION<=5
+#!requirement=CORE_VERSION=<6 OR CORE_VERSION>7 OR CORE_VERSION<8 OR CORE_VERSION!=9 OR CORE_VERSION<>10
+#!requirement=NOT SYSTEM BEGINSWITH 'mac' AND ! SYSTEM CONTAINS 'tv'
+#!requirement=SYSTEM_VERSION ENDSWITH '236' OR DEVICE_MODEL LIKE 'Mac*' OR LANGUAGE MATCHES 'zh-.*'
+#!requirement=(SYSTEM=='macOS' || SYSTEM=='iOS') && CORE_VERSION>=6008000
+
+---
+
+(source_file
+  (module_requirement_directive
+    condition: (requirement_binary_expression
+      left: (requirement_binary_expression
+        left: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (requirement_number)))
+        operator: (requirement_operator)
+        right: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (requirement_number))))
+      operator: (requirement_operator)
+      right: (requirement_binary_expression
+        left: (requirement_binary_expression
+          left: (requirement_predicate
+            variable: (requirement_variable)
+            operator: (requirement_operator)
+            value: (requirement_value
+              (requirement_number)))
+          operator: (requirement_operator)
+          right: (requirement_predicate
+            variable: (requirement_variable)
+            operator: (requirement_operator)
+            value: (requirement_value
+              (requirement_number))))
+        operator: (requirement_operator)
+        right: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (requirement_number))))))
+  (module_requirement_directive
+    condition: (requirement_binary_expression
+      left: (requirement_binary_expression
+        left: (requirement_binary_expression
+          left: (requirement_binary_expression
+            left: (requirement_predicate
+              variable: (requirement_variable)
+              operator: (requirement_operator)
+              value: (requirement_value
+                (requirement_number)))
+            operator: (requirement_operator)
+            right: (requirement_predicate
+              variable: (requirement_variable)
+              operator: (requirement_operator)
+              value: (requirement_value
+                (requirement_number))))
+          operator: (requirement_operator)
+          right: (requirement_predicate
+            variable: (requirement_variable)
+            operator: (requirement_operator)
+            value: (requirement_value
+              (requirement_number))))
+        operator: (requirement_operator)
+        right: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (requirement_number))))
+      operator: (requirement_operator)
+      right: (requirement_predicate
+        variable: (requirement_variable)
+        operator: (requirement_operator)
+        value: (requirement_value
+          (requirement_number)))))
+  (module_requirement_directive
+    condition: (requirement_binary_expression
+      left: (requirement_unary_expression
+        operator: (requirement_operator)
+        operand: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (single_quoted_value))))
+      operator: (requirement_operator)
+      right: (requirement_unary_expression
+        operator: (requirement_operator)
+        operand: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (single_quoted_value))))))
+  (module_requirement_directive
+    condition: (requirement_binary_expression
+      left: (requirement_binary_expression
+        left: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (single_quoted_value)))
+        operator: (requirement_operator)
+        right: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (single_quoted_value))))
+      operator: (requirement_operator)
+      right: (requirement_predicate
+        variable: (requirement_variable)
+        operator: (requirement_operator)
+        value: (requirement_value
+          (single_quoted_value)))))
+  (module_requirement_directive
+    condition: (requirement_binary_expression
+      left: (requirement_group
+        expression: (requirement_binary_expression
+          left: (requirement_predicate
+            variable: (requirement_variable)
+            operator: (requirement_operator)
+            value: (requirement_value
+              (single_quoted_value)))
+          operator: (requirement_operator)
+          right: (requirement_predicate
+            variable: (requirement_variable)
+            operator: (requirement_operator)
+            value: (requirement_value
+              (single_quoted_value)))))
+      operator: (requirement_operator)
+      right: (requirement_predicate
+        variable: (requirement_variable)
+        operator: (requirement_operator)
+        value: (requirement_value
+          (requirement_number))))))
+
+============================================================
+requirements dispatch across structured statement families
+============================================================
+
+[Rule]
+#!REQUIREMENT CORE_VERSION>=6008000 AND,((DOMAIN,example.com),(PROTOCOL,TCP)),DIRECT
+[Ruleset Conditional]
+DOMAIN-SUFFIX,example.com #!TVOS-ONLY
+[URL Rewrite]
+#!MACOS-ONLY ^http://old.example https://new.example
+[SSID Setting]
+SSID:Office suspend=true //!REQUIREMENT SYSTEM=='iOS'
+
+---
+
+(source_file
+  (rule_section
+    (section_header)
+    (conditional_statement
+      condition: (requirement_prefix
+        expression: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (requirement_number))))
+      body: (logical_rule
+        condition: (logical_rule_expression
+          operator: (logical_operator)
+          operand: (logical_rule_operand
+            expression: (rule_predicate
+              kind: (rule_kind)
+              argument: (positional_value
+                value: (bare_value))))
+          operand: (logical_rule_operand
+            expression: (rule_predicate
+              kind: (rule_kind)
+              argument: (positional_value
+                value: (bare_value)))))
+        policy: (policy
+          value: (bare_value)))))
+  (ruleset_section
+    (section_header
+      name: (section_name))
+    (conditional_statement
+      body: (ordered_comma_statement
+        kind: (rule_kind)
+        argument: (positional_value
+          value: (bare_value)))
+      condition: (platform_requirement_suffix)))
+  (url_rewrite_section
+    (section_header)
+    (conditional_statement
+      condition: (platform_requirement_prefix)
+      body: (rewrite
+        argument: (positional_value
+          value: (bare_value))
+        argument: (positional_value
+          value: (bare_value)))))
+  (ssid_setting_section
+    (section_header)
+    (conditional_statement
+      body: (whitespace_statement
+        argument: (positional_value
+          value: (bare_value))
+        parameter: (named_parameter
+          key: (parameter_key)
+          value: (bare_value)))
+      condition: (requirement_suffix
+        expression: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (single_quoted_value)))))))
+
+====================================================
+malformed requirements recover at physical newlines
+====================================================
+
+[General]
+#!REQUIREMENT CORE_VERSION>=
+next = valid
+broken = value //!REQUIREMENT SYSTEM==
+after = valid
+[Rule]
+FINAL,DIRECT
+
+---
+
+(source_file
+  (general_section
+    (section_header)
+    (ERROR
+      (requirement_variable)
+      (requirement_operator))
+    (assignment
+      (key)
+      (bare_value))
+    (conditional_statement
+      (assignment
+        (key)
+        (bare_value))
+      (requirement_suffix
+        (requirement_predicate
+          (requirement_variable)
+          (requirement_operator)
+          (requirement_value
+            (MISSING requirement_number)))))
+    (assignment
+      (key)
+      (bare_value)))
+  (rule_section
+    (section_header)
+    (rule
+      (rule_kind)
+      (policy
+        (bare_value)))))

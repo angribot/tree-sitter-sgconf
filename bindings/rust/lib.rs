@@ -197,4 +197,146 @@ mod tests {
             "section name should exclude surrounding whitespace"
         );
     }
+
+    #[test]
+    fn logical_rule_fields_preserve_recursive_source_ranges() {
+        let source =
+            "[Rule]\nAND,((DOMAIN,example.com),(NOT,((PROTOCOL,UDP)))),DIRECT,pre-matching\n";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let section = tree.root_node().named_child(0).expect("missing section");
+        let rule = section.named_child(1).expect("missing logical rule");
+        let condition = rule
+            .child_by_field_name("condition")
+            .expect("missing logical condition");
+        let operator = condition
+            .child_by_field_name("operator")
+            .expect("missing logical operator");
+        let mut operand_cursor = condition.walk();
+        let operands: Vec<_> = condition
+            .children_by_field_name("operand", &mut operand_cursor)
+            .collect();
+        let nested_expression = operands[1]
+            .child_by_field_name("expression")
+            .expect("missing nested logical expression");
+        let policy = rule
+            .child_by_field_name("policy")
+            .expect("missing logical rule policy");
+        let option = rule
+            .child_by_field_name("option")
+            .expect("missing logical rule option");
+
+        assert_eq!(rule.kind(), "logical_rule");
+        assert_eq!(&source[operator.byte_range()], "AND");
+        assert_eq!(&source[operands[0].byte_range()], "(DOMAIN,example.com)");
+        assert_eq!(nested_expression.kind(), "logical_rule_expression");
+        assert_eq!(
+            &source[nested_expression.byte_range()],
+            "NOT,((PROTOCOL,UDP))"
+        );
+        assert_eq!(&source[policy.byte_range()], "DIRECT");
+        assert_eq!(&source[option.byte_range()], "pre-matching");
+        assert!(!tree.root_node().has_error());
+    }
+
+    #[test]
+    fn requirement_fields_preserve_expression_and_body_ranges() {
+        let source = "[General]\n#!REQUIREMENT \"CORE_VERSION>=6008000 AND SYSTEM=='macOS'\" feature = enabled\n";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let section = tree.root_node().named_child(0).expect("missing section");
+        let conditional = section
+            .named_child(1)
+            .expect("missing conditional statement");
+        let condition = conditional
+            .child_by_field_name("condition")
+            .expect("missing line requirement");
+        let quoted_expression = condition
+            .child_by_field_name("expression")
+            .expect("missing quoted requirement expression");
+        let expression = quoted_expression
+            .child_by_field_name("expression")
+            .expect("missing requirement expression");
+        let operator = expression
+            .child_by_field_name("operator")
+            .expect("missing boolean operator");
+        let body = conditional
+            .child_by_field_name("body")
+            .expect("missing conditional body");
+
+        assert_eq!(conditional.kind(), "conditional_statement");
+        assert_eq!(condition.kind(), "requirement_prefix");
+        assert_eq!(expression.kind(), "requirement_binary_expression");
+        assert_eq!(&source[operator.byte_range()], "AND");
+        assert_eq!(&source[body.byte_range()], "feature = enabled");
+        assert!(!tree.root_node().has_error());
+    }
+
+    #[test]
+    fn module_syntax_preserves_directive_merge_and_placeholder_ranges() {
+        let source = "#!arguments=hostname=example.com&path=%default_path%\n[General]\nurl = %INSERT% \"https://%hostname%/%path%\"\n";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let root = tree.root_node();
+        let arguments_directive = root.named_child(0).expect("missing arguments directive");
+        let mut argument_cursor = arguments_directive.walk();
+        let arguments: Vec<_> = arguments_directive
+            .children_by_field_name("argument", &mut argument_cursor)
+            .collect();
+        let default_placeholder = arguments[1]
+            .child_by_field_name("default")
+            .and_then(|default| default.named_child(0))
+            .expect("missing default placeholder");
+        let section = root.named_child(1).expect("missing General section");
+        let assignment = section.named_child(1).expect("missing assignment");
+        let merge = assignment
+            .child_by_field_name("value")
+            .expect("missing merge value");
+        let operator = merge
+            .child_by_field_name("operator")
+            .expect("missing merge operator");
+        let value = merge
+            .child_by_field_name("value")
+            .expect("missing merged value");
+        let mut value_cursor = value.walk();
+        let placeholders: Vec<_> = value
+            .named_children(&mut value_cursor)
+            .filter(|node| node.kind() == "module_argument_placeholder")
+            .collect();
+
+        assert_eq!(arguments_directive.kind(), "module_arguments_directive");
+        assert_eq!(&source[arguments[0].byte_range()], "hostname=example.com");
+        assert_eq!(&source[default_placeholder.byte_range()], "%default_path%");
+        assert_eq!(merge.kind(), "module_merge_value");
+        assert_eq!(&source[operator.byte_range()], "%INSERT%");
+        assert_eq!(placeholders.len(), 2);
+        assert_eq!(&source[placeholders[0].byte_range()], "%hostname%");
+        assert_eq!(&source[placeholders[1].byte_range()], "%path%");
+        assert!(!root.has_error());
+    }
+
+    #[test]
+    fn recursive_syntax_errors_are_bounded_by_physical_lines() {
+        let source =
+            "[Rule]\nAND,((DOMAIN,a),(DOMAIN,b\nDOMAIN,x,DIRECT\n[General]\nnext = valid\n";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let root = tree.root_node();
+        let rule_section = root.named_child(0).expect("missing Rule section");
+        let recovered_rule = rule_section.named_child(2).expect("missing recovered rule");
+        let general_section = root
+            .named_child(1)
+            .expect("missing recovered General section");
+
+        assert!(root.has_error());
+        assert_eq!(recovered_rule.kind(), "rule");
+        assert_eq!(&source[recovered_rule.byte_range()], "DOMAIN,x,DIRECT");
+        assert!(!recovered_rule.has_error());
+        assert_eq!(general_section.kind(), "general_section");
+        assert!(!general_section.has_error());
+    }
 }
