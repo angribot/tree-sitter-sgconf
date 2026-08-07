@@ -1,0 +1,9 @@
+* text=auto eol=lf
+
+# Generated parser artifacts
+src/*.json linguist-generated
+src/parser.c linguist-generated
+src/tree_sitter/* linguist-generated
+
+# Generated C declaration
+bindings/c/** linguist-generated

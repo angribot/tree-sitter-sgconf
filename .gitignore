@@ -1,0 +1,14 @@
+# Rust and Node artifacts
+target/
+build/
+node_modules/
+
+# Compiled parser artifacts
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.obj
+*.o
+*.wasm

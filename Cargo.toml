@@ -1,0 +1,34 @@
+[package]
+name = "tree-sitter-sgconf"
+description = "Tree-sitter grammar for Surge configuration documents"
+version = "0.1.0"
+authors = ["Civi"]
+license = "MIT"
+keywords = ["incremental", "parsing", "tree-sitter", "sgconf"]
+categories = ["parser-implementations", "parsing", "text-editors"]
+repository = "https://github.com/angribot/tree-sitter-sgconf"
+edition = "2021"
+rust-version = "1.77"
+autoexamples = false
+
+build = "bindings/rust/build.rs"
+include = [
+  "bindings/rust/*",
+  "grammar.js",
+  "queries/*",
+  "src/*",
+  "tree-sitter.json",
+  "/LICENSE",
+]
+
+[lib]
+path = "bindings/rust/lib.rs"
+
+[dependencies]
+tree-sitter-language = "0.1.7"
+
+[build-dependencies]
+cc = "1.2"
+
+[dev-dependencies]
+tree-sitter = "0.26.11"
