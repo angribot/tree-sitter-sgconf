@@ -66,11 +66,77 @@ mod tests {
 
             assert_eq!(
                 root.to_sexp(),
-                "(source_file (general_section (section_header) (unknown_line)))",
+                "(source_file (general_section (section_header) (assignment key: (key) value: (bare_value))))",
                 "{name} produced an unexpected tree"
             );
             assert!(!root.has_error(), "{name} produced a parse error");
         }
+    }
+
+    #[test]
+    fn declaration_fields_preserve_exact_source_ranges() {
+        let source = "[Proxy]\nOffice HTTP = https, proxy.example.com, 443, username=user\n";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let section = tree.root_node().named_child(0).expect("missing section");
+        let declaration = section.named_child(1).expect("missing named declaration");
+        let name = declaration
+            .child_by_field_name("name")
+            .expect("missing declaration name");
+        let mut argument_cursor = declaration.walk();
+        let arguments: Vec<_> = declaration
+            .children_by_field_name("argument", &mut argument_cursor)
+            .map(|node| &source[node.byte_range()])
+            .collect();
+        let mut parameter_cursor = declaration.walk();
+        let parameters: Vec<_> = declaration
+            .children_by_field_name("parameter", &mut parameter_cursor)
+            .collect();
+        let parameter = parameters.first().expect("missing named parameter");
+        let key = parameter
+            .child_by_field_name("key")
+            .expect("missing parameter key");
+        let value = parameter
+            .child_by_field_name("value")
+            .expect("missing parameter value");
+
+        assert_eq!(&source[name.byte_range()], "Office HTTP");
+        assert_eq!(arguments, ["https", "proxy.example.com", "443"]);
+        assert_eq!(&source[parameter.byte_range()], "username=user");
+        assert_eq!(&source[key.byte_range()], "username");
+        assert_eq!(&source[value.byte_range()], "user");
+        assert!(!tree.root_node().has_error());
+    }
+
+    #[test]
+    fn rule_fields_preserve_exact_source_ranges() {
+        let source = "[Rule]\nDOMAIN-SUFFIX,example.com,Primary Policy,no-resolve,notification-text=Matched\n";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let section = tree.root_node().named_child(0).expect("missing section");
+        let rule = section.named_child(1).expect("missing rule");
+        let kind = rule.child_by_field_name("kind").expect("missing rule kind");
+        let argument = rule
+            .child_by_field_name("argument")
+            .expect("missing rule argument");
+        let policy = rule
+            .child_by_field_name("policy")
+            .expect("missing rule policy");
+        let option = rule
+            .child_by_field_name("option")
+            .expect("missing rule option");
+        let parameter = rule
+            .child_by_field_name("parameter")
+            .expect("missing rule parameter");
+
+        assert_eq!(&source[kind.byte_range()], "DOMAIN-SUFFIX");
+        assert_eq!(&source[argument.byte_range()], "example.com");
+        assert_eq!(&source[policy.byte_range()], "Primary Policy");
+        assert_eq!(&source[option.byte_range()], "no-resolve");
+        assert_eq!(&source[parameter.byte_range()], "notification-text=Matched");
+        assert!(!tree.root_node().has_error());
     }
 
     #[test]
