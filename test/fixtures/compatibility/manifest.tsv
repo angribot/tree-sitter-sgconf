@@ -1,0 +1,15 @@
+# fixture	parser	surge-cli	top-level CST	source or rationale
+documented/profile.conf	clean	accepted	comment,comment,comment,general_section,proxy_section,proxy_group_section,rule_section	https://manual.nssurge.com/profile/format.html
+documented/inline-ruleset.conf	clean	accepted	general_section,ruleset_section,rule_section	https://manual.nssurge.com/rule/ruleset.html
+documented/module.sgmodule	clean	not-applicable	module_name_directive,module_description_directive,module_system_directive,module_arguments_directive,module_requirement_directive,general_section	https://manual.nssurge.com/profile/module.html
+documented/directives.conf	clean	not-applicable	managed_config_directive,forbidden_auto_upgrade_directive,general_section,proxy_section,rule_section	https://manual.nssurge.com/profile/managed-profile.html,https://manual.nssurge.com/profile/format.html
+documented/large-rule-profile.conf	clean	accepted	rule_section	https://manual.nssurge.com/rules/overview.html
+surge-validated/repeated-sections.conf	clean	accepted	general_section,general_section,rule_section	surge-cli:repeated-section-acceptance
+surge-validated/unknown-extensions.conf	clean	accepted	general_section,unknown_section,rule_section	https://manual.nssurge.com/profile/format.html
+surge-validated/structural-case-rejected.conf	clean	rejected	general_section,unknown_section	surge-cli:case-sensitive-section-dispatch
+surge-validated/utf8-bom.conf	clean	accepted	general_section,rule_section	surge-cli:utf8-bom-acceptance
+surge-validated/crlf.conf	clean	accepted	general_section,rule_section	surge-cli:crlf-acceptance
+surge-validated/no-final-newline.conf	clean	accepted	general_section,rule_section	surge-cli:missing-final-newline-acceptance
+recovery/future-syntax.conf	clean	not-applicable	directive,unknown_section,general_section,rule_section	recovery:unknown-extension-preservation
+recovery/malformed-logical-rule.conf	localized-error	not-applicable	rule_section,general_section	recovery:physical-line-boundary
+recovery/malformed-header.conf	localized-error	not-applicable	general_section,ERROR,rule_section,general_section	recovery:section-boundary
