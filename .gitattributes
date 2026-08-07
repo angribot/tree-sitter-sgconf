@@ -1,5 +1,8 @@
 * text=auto eol=lf
 
+# Preserve the CRLF parser fixture
+/test/corpus/crlf.txt -text -whitespace
+
 # Generated parser artifacts
 src/*.json linguist-generated
 src/parser.c linguist-generated

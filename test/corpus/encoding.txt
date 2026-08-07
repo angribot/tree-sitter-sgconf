@@ -1,0 +1,25 @@
+=================================
+UTF-8 BOM
+=================================
+﻿[General]
+opaque = value
+
+---
+
+(source_file
+  (general_section
+    (section_header)
+    (unknown_line)))
+
+=================================
+LF without a final newline
+=================================
+[General]
+opaque = value
+
+---
+
+(source_file
+  (general_section
+    (section_header)
+    (unknown_line)))

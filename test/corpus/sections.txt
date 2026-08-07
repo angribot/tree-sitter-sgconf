@@ -1,0 +1,263 @@
+=================================
+all documented fixed sections
+=================================
+
+[General]
+[Proxy]
+[Proxy Group]
+[Rule]
+[Host]
+[URL Rewrite]
+[Header Rewrite]
+[Body Rewrite]
+[Map Local]
+[MITM]
+[Keystore]
+[SSID Setting]
+[Script]
+[Panel]
+[Ponte]
+[Port Forwarding]
+[Testing]
+[DHCP]
+[Snell Server]
+[MTProto]
+
+---
+
+(source_file
+  (general_section
+    (section_header))
+  (proxy_section
+    (section_header))
+  (proxy_group_section
+    (section_header))
+  (rule_section
+    (section_header))
+  (host_section
+    (section_header))
+  (url_rewrite_section
+    (section_header))
+  (header_rewrite_section
+    (section_header))
+  (body_rewrite_section
+    (section_header))
+  (map_local_section
+    (section_header))
+  (mitm_section
+    (section_header))
+  (keystore_section
+    (section_header))
+  (ssid_setting_section
+    (section_header))
+  (script_section
+    (section_header))
+  (panel_section
+    (section_header))
+  (ponte_section
+    (section_header))
+  (port_forwarding_section
+    (section_header))
+  (testing_section
+    (section_header))
+  (dhcp_section
+    (section_header))
+  (snell_server_section
+    (section_header))
+  (mtproto_section
+    (section_header)))
+
+=================================
+dynamic section families preserve names
+=================================
+
+[WireGuard office]
+[Tailscale personal mesh]
+[Ruleset Streaming Media]
+
+---
+
+(source_file
+  (wireguard_section
+    (section_header
+      name: (section_name)))
+  (tailscale_section
+    (section_header
+      name: (section_name)))
+  (ruleset_section
+    (section_header
+      name: (section_name))))
+
+=================================
+unknown and repeated sections remain visible
+=================================
+
+[Future Protocol]
+opaque = first
+another opaque line
+
+[General]
+first = value
+
+[General]
+second = value
+
+---
+
+(source_file
+  (unknown_section
+    (section_header
+      name: (section_name))
+    (unknown_line)
+    (unknown_line))
+  (general_section
+    (section_header)
+    (unknown_line))
+  (general_section
+    (section_header)
+    (unknown_line)))
+
+=================================
+full-line comments and directives are distinct
+=================================
+
+#!name=Example Module
+# hash comment
+; semicolon comment
+// slash comment
+
+[General]
+  # indented comment
+#!include Shared.dconf
+opaque = value
+
+---
+
+(source_file
+  (directive)
+  (comment)
+  (comment)
+  (comment)
+  (general_section
+    (section_header)
+    (comment)
+    (directive)
+    (unknown_line)))
+
+=================================
+malformed content does not consume the next section
+=================================
+
+[General]
+[unterminated header
+
+[Proxy]
+proxy = direct
+
+---
+
+(source_file
+  (general_section
+    (section_header))
+  (unknown_section
+    (section_header
+      (section_name)
+      (MISSING "]")))
+  (proxy_section
+    (section_header)
+    (unknown_line)))
+
+=================================
+header matching is case-sensitive and permits surrounding whitespace
+=================================
+
+  [General]
+[general]
+[Ruleset   Streaming Media  ]
+
+---
+
+(source_file
+  (general_section
+    (section_header))
+  (unknown_section
+    (section_header
+      name: (section_name)))
+  (ruleset_section
+    (section_header
+      name: (section_name))))
+
+=================================
+orphan content recovers at the next section header
+=================================
+
+orphan content
+[Rule]
+FINAL,DIRECT
+
+---
+
+(source_file
+  (ERROR
+    (unknown_line))
+  (rule_section
+    (section_header)
+    (unknown_line)))
+
+=================================
+concatenated section headers are malformed
+=================================
+
+[General][Proxy]
+[Rule]
+FINAL,DIRECT
+
+---
+
+(source_file
+  (general_section
+    (section_header))
+  (ERROR
+    (section_header))
+  (rule_section
+    (section_header)
+    (unknown_line)))
+
+=================================
+trailing header data is a local error
+=================================
+
+[General] trailing data
+[Rule]
+FINAL,DIRECT
+
+---
+
+(source_file
+  (general_section
+    (section_header))
+  (ERROR
+    (unknown_line))
+  (rule_section
+    (section_header)
+    (unknown_line)))
+
+=================================
+dynamic headers cannot cross physical lines
+=================================
+
+[Ruleset name
+]
+[Rule]
+FINAL,DIRECT
+
+---
+
+(source_file
+  (ruleset_section
+    (section_header
+      name: (section_name)
+      (ERROR)))
+  (rule_section
+    (section_header)
+    (unknown_line)))
