@@ -112,10 +112,14 @@ second = value
     (unknown_line))
   (general_section
     (section_header)
-    (unknown_line))
+    (assignment
+      key: (key)
+      value: (bare_value)))
   (general_section
     (section_header)
-    (unknown_line)))
+    (assignment
+      key: (key)
+      value: (bare_value))))
 
 =================================
 full-line comments and directives are distinct
@@ -142,7 +146,9 @@ opaque = value
     (section_header)
     (comment)
     (directive)
-    (unknown_line)))
+    (assignment
+      (key)
+      (bare_value))))
 
 =================================
 malformed content does not consume the next section
@@ -165,7 +171,10 @@ proxy = direct
       (MISSING "]")))
   (proxy_section
     (section_header)
-    (unknown_line)))
+    (named_declaration
+      (declaration_name)
+      (positional_value
+        (bare_value)))))
 
 =================================
 header matching is case-sensitive and permits surrounding whitespace
@@ -198,11 +207,13 @@ FINAL,DIRECT
 ---
 
 (source_file
-  (ERROR
-    (unknown_line))
+  (ERROR)
   (rule_section
     (section_header)
-    (unknown_line)))
+    (rule
+      (rule_kind)
+      (policy
+        (bare_value)))))
 
 =================================
 concatenated section headers are malformed
@@ -215,13 +226,16 @@ FINAL,DIRECT
 ---
 
 (source_file
-  (general_section
-    (section_header))
   (ERROR
+    (section_header))
+  (proxy_section
     (section_header))
   (rule_section
     (section_header)
-    (unknown_line)))
+    (rule
+      (rule_kind)
+      (policy
+        (bare_value)))))
 
 =================================
 trailing header data is a local error
@@ -236,11 +250,13 @@ FINAL,DIRECT
 (source_file
   (general_section
     (section_header))
-  (ERROR
-    (unknown_line))
+  (ERROR)
   (rule_section
     (section_header)
-    (unknown_line)))
+    (rule
+      (rule_kind)
+      (policy
+        (bare_value)))))
 
 =================================
 dynamic headers cannot cross physical lines
@@ -260,4 +276,7 @@ FINAL,DIRECT
       (ERROR)))
   (rule_section
     (section_header)
-    (unknown_line)))
+    (rule
+      kind: (rule_kind)
+      policy: (policy
+        value: (bare_value)))))

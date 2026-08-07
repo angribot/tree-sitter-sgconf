@@ -1,5 +1,68 @@
 [
   {
+    "type": "assignment",
+    "named": true,
+    "fields": {
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "key": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "key",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "bare_value",
+            "named": true
+          },
+          {
+            "type": "double_quoted_value",
+            "named": true
+          },
+          {
+            "type": "single_quoted_value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "bare_value",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "double_quoted_value",
+          "named": true
+        },
+        {
+          "type": "single_quoted_value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "body_rewrite_section",
     "named": true,
     "fields": {},
@@ -16,6 +79,10 @@
           "named": true
         },
         {
+          "type": "rewrite",
+          "named": true
+        },
+        {
           "type": "section_header",
           "named": true
         },
@@ -27,6 +94,11 @@
     }
   },
   {
+    "type": "declaration_name",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "dhcp_section",
     "named": true,
     "fields": {},
@@ -34,6 +106,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
         {
           "type": "comment",
           "named": true
@@ -54,6 +130,11 @@
     }
   },
   {
+    "type": "double_quoted_value",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "general_section",
     "named": true,
     "fields": {},
@@ -61,6 +142,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
         {
           "type": "comment",
           "named": true
@@ -97,6 +182,10 @@
           "named": true
         },
         {
+          "type": "rewrite",
+          "named": true
+        },
+        {
           "type": "section_header",
           "named": true
         },
@@ -116,6 +205,10 @@
       "required": true,
       "types": [
         {
+          "type": "assignment",
+          "named": true
+        },
+        {
           "type": "comment",
           "named": true
         },
@@ -135,6 +228,11 @@
     }
   },
   {
+    "type": "key",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "keystore_section",
     "named": true,
     "fields": {},
@@ -148,6 +246,10 @@
         },
         {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "named_declaration",
           "named": true
         },
         {
@@ -178,6 +280,10 @@
           "named": true
         },
         {
+          "type": "rewrite",
+          "named": true
+        },
+        {
           "type": "section_header",
           "named": true
         },
@@ -196,6 +302,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
         {
           "type": "comment",
           "named": true
@@ -224,6 +334,10 @@
       "required": true,
       "types": [
         {
+          "type": "assignment",
+          "named": true
+        },
+        {
           "type": "comment",
           "named": true
         },
@@ -240,6 +354,132 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "named_declaration",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "positional_value",
+            "named": true
+          }
+        ]
+      },
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "declaration_name",
+            "named": true
+          }
+        ]
+      },
+      "parameter": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "named_parameter",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "named_parameter",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "parameter_key",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "bare_value",
+            "named": true
+          },
+          {
+            "type": "double_quoted_value",
+            "named": true
+          },
+          {
+            "type": "single_quoted_value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "ordered_comma_statement",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "positional_value",
+            "named": true
+          }
+        ]
+      },
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "kind": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "rule_kind",
+            "named": true
+          }
+        ]
+      },
+      "parameter": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "named_parameter",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -259,6 +499,10 @@
           "named": true
         },
         {
+          "type": "named_declaration",
+          "named": true
+        },
+        {
           "type": "section_header",
           "named": true
         },
@@ -270,6 +514,35 @@
     }
   },
   {
+    "type": "parameter_key",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "policy",
+    "named": true,
+    "fields": {
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "bare_value",
+            "named": true
+          },
+          {
+            "type": "double_quoted_value",
+            "named": true
+          },
+          {
+            "type": "single_quoted_value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "ponte_section",
     "named": true,
     "fields": {},
@@ -277,6 +550,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
         {
           "type": "comment",
           "named": true
@@ -319,8 +596,36 @@
         {
           "type": "unknown_line",
           "named": true
+        },
+        {
+          "type": "whitespace_statement",
+          "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "positional_value",
+    "named": true,
+    "fields": {
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "bare_value",
+            "named": true
+          },
+          {
+            "type": "double_quoted_value",
+            "named": true
+          },
+          {
+            "type": "single_quoted_value",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -337,6 +642,10 @@
         },
         {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "named_declaration",
           "named": true
         },
         {
@@ -367,6 +676,10 @@
           "named": true
         },
         {
+          "type": "named_declaration",
+          "named": true
+        },
+        {
           "type": "section_header",
           "named": true
         },
@@ -376,6 +689,123 @@
         }
       ]
     }
+  },
+  {
+    "type": "rewrite",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "positional_value",
+            "named": true
+          }
+        ]
+      },
+      "body": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "positional_value",
+            "named": true
+          }
+        ]
+      },
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "parameter": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "named_parameter",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rule",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "positional_value",
+            "named": true
+          }
+        ]
+      },
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "kind": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "rule_kind",
+            "named": true
+          }
+        ]
+      },
+      "option": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "positional_value",
+            "named": true
+          }
+        ]
+      },
+      "parameter": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "named_parameter",
+            "named": true
+          }
+        ]
+      },
+      "policy": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "policy",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "rule_kind",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "rule_section",
@@ -391,6 +821,10 @@
         },
         {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "rule",
           "named": true
         },
         {
@@ -421,6 +855,10 @@
           "named": true
         },
         {
+          "type": "ordered_comma_statement",
+          "named": true
+        },
+        {
           "type": "section_header",
           "named": true
         },
@@ -445,6 +883,10 @@
         },
         {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "named_declaration",
           "named": true
         },
         {
@@ -475,6 +917,11 @@
     }
   },
   {
+    "type": "single_quoted_value",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "snell_server_section",
     "named": true,
     "fields": {},
@@ -482,6 +929,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
         {
           "type": "comment",
           "named": true
@@ -640,6 +1091,10 @@
         {
           "type": "unknown_line",
           "named": true
+        },
+        {
+          "type": "whitespace_statement",
+          "named": true
         }
       ]
     }
@@ -652,6 +1107,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
         {
           "type": "comment",
           "named": true
@@ -680,6 +1139,10 @@
       "required": true,
       "types": [
         {
+          "type": "assignment",
+          "named": true
+        },
+        {
           "type": "comment",
           "named": true
         },
@@ -697,6 +1160,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "unknown_line",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "unknown_section",
@@ -742,6 +1210,10 @@
           "named": true
         },
         {
+          "type": "rewrite",
+          "named": true
+        },
+        {
           "type": "section_header",
           "named": true
         },
@@ -753,6 +1225,42 @@
     }
   },
   {
+    "type": "whitespace_statement",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "positional_value",
+            "named": true
+          }
+        ]
+      },
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "parameter": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "named_parameter",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "wireguard_section",
     "named": true,
     "fields": {},
@@ -760,6 +1268,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
         {
           "type": "comment",
           "named": true
@@ -778,6 +1290,10 @@
         }
       ]
     }
+  },
+  {
+    "type": "=",
+    "named": false
   },
   {
     "type": "[",
@@ -809,10 +1325,6 @@
   },
   {
     "type": "section_name",
-    "named": true
-  },
-  {
-    "type": "unknown_line",
     "named": true
   }
 ]

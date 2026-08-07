@@ -1,0 +1,533 @@
+=============================================
+assignments preserve values and inline comments
+=============================================
+
+[General]
+dns-server = 8.8.8.8, https://dns.example/dns-query
+quoted-example = "a quoted value: \"text\"; path: C:\\Proxy" # trailing hash comment
+single-example = 'https://example.test/a#b;c//d' ; trailing semicolon comment
+opaque-delimiters = https://example.test/a#b;c//d
+download-url =
+
+---
+
+(source_file
+  (general_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value))
+    (assignment
+      key: (key)
+      value: (double_quoted_value)
+      comment: (comment))
+    (assignment
+      key: (key)
+      value: (single_quoted_value)
+      comment: (comment))
+    (assignment
+      key: (key)
+      value: (bare_value))
+    (assignment
+      key: (key))))
+
+=============================================
+assignment family dispatches by section
+=============================================
+
+[Host]
+DOMAIN-SET:https://example.com/domains.txt = server:https://doh.example/dns-query
+[MITM]
+hostname = *.example.com
+[Ponte]
+server-proxy-name = Proxy-A, Proxy-B
+[Testing]
+download-url = https://speed.example/file?size=1#fragment
+[DHCP]
+max-lease-time = 86400
+[Snell Server]
+psk = RANDOM_KEY_HERE
+[MTProto]
+secret = dd0123456789abcdef0123456789abcdef
+[WireGuard office]
+peer = (public-key = abc, allowed-ips = "10.0.0.0/8, 192.168.0.0/16", endpoint = vpn.example:51820)
+[Tailscale personal]
+auth-key = tskey-auth-example
+
+---
+
+(source_file
+  (host_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value)))
+  (mitm_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value)))
+  (ponte_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value)))
+  (testing_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value)))
+  (dhcp_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value)))
+  (snell_server_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value)))
+  (mtproto_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value)))
+  (wireguard_section
+    (section_header
+      name: (section_name))
+    (assignment
+      key: (key)
+      value: (bare_value
+        (double_quoted_value))))
+  (tailscale_section
+    (section_header
+      name: (section_name))
+    (assignment
+      key: (key)
+      value: (bare_value))))
+
+======================================================
+named declarations retain arguments and named parameters
+======================================================
+
+[Proxy]
+Office HTTP = https, proxy.example.com, 443, username=user, password="p#; // word", headers=X-Client:Surge;X-Token:abc // proxy comment
+[Proxy Group]
+Primary = select, Office HTTP, DIRECT, hidden=true
+[Keystore]
+cert1 = type=p12, base64=dGVzdA==, password='secret'
+[Script]
+refresh = type=cron, cronexp="* * * * *", script-path=https://example.com/task.js?mode=a=b
+[Panel]
+Status = title="Panel #1", content="Ready\n# still content", style=info
+
+---
+
+(source_file
+  (proxy_section
+    (section_header)
+    (named_declaration
+      name: (declaration_name)
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (double_quoted_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))
+      comment: (comment)))
+  (proxy_group_section
+    (section_header)
+    (named_declaration
+      name: (declaration_name)
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))))
+  (keystore_section
+    (section_header)
+    (named_declaration
+      name: (declaration_name)
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (single_quoted_value))))
+  (script_section
+    (section_header)
+    (named_declaration
+      name: (declaration_name)
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (double_quoted_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))))
+  (panel_section
+    (section_header)
+    (named_declaration
+      name: (declaration_name)
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (double_quoted_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (double_quoted_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value)))))
+
+====================================================
+rules expose kinds arguments policies and options
+====================================================
+
+[Rule]
+DOMAIN-SUFFIX,example.com,Primary Policy,no-resolve,notification-text="Matched #1" // rule comment
+FINAL,DIRECT,dns-failed
+AND,((DOMAIN,a),(DOMAIN,b)),DIRECT
+
+---
+
+(source_file
+  (rule_section
+    (section_header)
+    (rule
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value))
+      policy: (policy
+        value: (bare_value))
+      option: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (double_quoted_value))
+      comment: (comment))
+    (rule
+      kind: (rule_kind)
+      policy: (policy
+        value: (bare_value))
+      option: (positional_value
+        value: (bare_value)))
+    (unknown_line)))
+
+====================================================
+inline rulesets are ordered comma statements
+====================================================
+
+[Ruleset Streaming]
+DOMAIN-SUFFIX,netflix.com
+URL-REGEX,'^https?://example.com/a,b$',extended-matching
+
+---
+
+(source_file
+  (ruleset_section
+    (section_header
+      name: (section_name))
+    (ordered_comma_statement
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value)))
+    (ordered_comma_statement
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (single_quoted_value))
+      argument: (positional_value
+        value: (bare_value)))))
+
+====================================================
+rewrites preserve opaque whitespace-delimited payloads
+====================================================
+
+[URL Rewrite]
+^https?://old\.example/(.*) https://new.example/$1?from=a=b 307 # redirect
+[Header Rewrite]
+http-response ^https://example\.com header-replace-regex Date "2022 # old" '2023 // new'
+[Body Rewrite]
+http-response-jq ^https://api\.example/data '.items |= map(select(.url == "https://a/b#c"))'
+[Map Local]
+^https://surgetest\.com/base64 data="dGVzdA==" data-type=base64 header="a:b|foo:bar"
+
+---
+
+(source_file
+  (url_rewrite_section
+    (section_header)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      comment: (comment)))
+  (header_rewrite_section
+    (section_header)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (double_quoted_value))
+      argument: (positional_value
+        value: (single_quoted_value))))
+  (body_rewrite_section
+    (section_header)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      body: (positional_value
+        value: (single_quoted_value))))
+  (map_local_section
+    (section_header)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (double_quoted_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (double_quoted_value)))))
+
+====================================================
+whitespace statements retain arguments and parameters
+====================================================
+
+[SSID Setting]
+SSID:MyHome dns-server=8.8.8.8,encrypted-dns-server=https://1.1.1.1/
+[Port Forwarding]
+0.0.0.0:6841 localhost:3306 policy="SQL Server Proxy" // forwarding comment
+
+---
+
+(source_file
+  (ssid_setting_section
+    (section_header)
+    (whitespace_statement
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))))
+  (port_forwarding_section
+    (section_header)
+    (whitespace_statement
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (double_quoted_value))
+      comment: (comment))))
+
+====================================================
+unknown extension lines do not interrupt known syntax
+====================================================
+
+[General]
+alpha = one
+future extension syntax
+beta = two
+[URL Rewrite]
+future rewrite "quoted extension payload" remains opaque
+^http://old.example https://new.example
+[Rule]
+future-rule-extension
+FINAL,DIRECT
+
+---
+
+(source_file
+  (general_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value))
+    (unknown_line)
+    (assignment
+      key: (key)
+      value: (bare_value)))
+  (url_rewrite_section
+    (section_header)
+    (unknown_line)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))))
+  (rule_section
+    (section_header)
+    (unknown_line)
+    (rule
+      kind: (rule_kind)
+      policy: (policy
+        value: (bare_value)))))
+
+====================================================
+malformed known forms recover at physical line boundaries
+====================================================
+
+[General]
+broken = "unterminated
+next = valid
+[Proxy]
+broken = http,
+next = direct
+[Rule]
+FINAL,DIRECT
+
+---
+
+(source_file
+  (general_section
+    (section_header)
+    (assignment
+      key: (key))
+    (ERROR
+      (unknown_line))
+    (assignment
+      key: (key)
+      value: (bare_value)))
+  (proxy_section
+    (section_header)
+    (unknown_line)
+    (named_declaration
+      name: (declaration_name)
+      argument: (positional_value
+        value: (bare_value))))
+  (rule_section
+    (section_header)
+    (rule
+      kind: (rule_kind)
+      policy: (policy
+        value: (bare_value)))))
+
+====================================================
+query strings remain positional comma values
+====================================================
+
+[Proxy]
+Tunnel = http, https://example.com/connect?token=a=b, username=user
+[Rule]
+URL-REGEX,^https://example.com/path?x=y$,DIRECT
+[Ruleset Query URLs]
+URL-REGEX,^https://example.com/path?x=y$
+
+---
+
+(source_file
+  (proxy_section
+    (section_header)
+    (named_declaration
+      name: (declaration_name)
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))))
+  (rule_section
+    (section_header)
+    (rule
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value))
+      policy: (policy
+        value: (bare_value))))
+  (ruleset_section
+    (section_header
+      name: (section_name))
+    (ordered_comma_statement
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value)))))
+
+====================================================
+malformed line families remain local and recoverable
+====================================================
+
+[Rule]
+DOMAIN-SUFFIX,example.com
+FINAL,DIRECT
+[Ruleset Recovery]
+DOMAIN-SUFFIX,
+DOMAIN-SUFFIX,example.com
+[URL Rewrite]
+pattern-only
+^http://old.example https://new.example
+[SSID Setting]
+SSID:MissingParameters
+SSID:MyHome suspend=true
+
+---
+
+(source_file
+  (rule_section
+    (section_header)
+    (unknown_line)
+    (rule
+      kind: (rule_kind)
+      policy: (policy
+        value: (bare_value))))
+  (ruleset_section
+    (section_header
+      name: (section_name))
+    (unknown_line)
+    (ordered_comma_statement
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value))))
+  (url_rewrite_section
+    (section_header)
+    (unknown_line)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))))
+  (ssid_setting_section
+    (section_header)
+    (unknown_line)
+    (whitespace_statement
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value)))))

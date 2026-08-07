@@ -9,4 +9,6 @@ opaque = value
 (source_file
   (general_section
     (section_header)
-    (unknown_line)))
+    (assignment
+      (key)
+      (bare_value))))
