@@ -20,7 +20,8 @@
   ],
   "scripts": {
     "generate": "tree-sitter generate",
-    "test": "tree-sitter test"
+    "test": "tree-sitter test",
+    "validate:surge": "bash scripts/check-surge-compatibility.sh"
   },
   "devDependencies": {
     "tree-sitter-cli": "0.26.11"

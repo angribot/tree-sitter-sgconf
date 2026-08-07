@@ -1,7 +1,8 @@
 * text=auto eol=lf
 
-# Preserve the CRLF parser fixture
+# Preserve the CRLF parser fixtures
 /test/corpus/crlf.txt -text -whitespace
+/test/fixtures/compatibility/surge-validated/crlf.conf -text -whitespace
 
 # Generated parser artifacts
 src/*.json linguist-generated

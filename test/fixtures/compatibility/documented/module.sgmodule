@@ -1,0 +1,8 @@
+#!name=Parameterized compatibility module
+#!desc=Exercises module metadata, placeholders, and merge operators
+#!system=mac
+#!arguments=hostname=service.example&fallback=backup.example
+#!requirement=CORE_VERSION>=6008000 AND SYSTEM=='macOS'
+[General]
+always-real-ip = %APPEND% %hostname%, %fallback%
+skip-proxy = %INSERT% localhost

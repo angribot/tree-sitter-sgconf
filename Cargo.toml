@@ -14,9 +14,14 @@ autoexamples = false
 build = "bindings/rust/build.rs"
 include = [
   "bindings/rust/*",
+  "docs/adr/*",
+  "docs/compatibility.md",
   "grammar.js",
   "queries/*",
+  "scripts/check-surge-compatibility.sh",
   "src/*",
+  "test/fixtures/compatibility/**",
+  "tests/*",
   "tree-sitter.json",
   "/LICENSE",
 ]
