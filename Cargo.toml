@@ -7,6 +7,7 @@ license = "MIT"
 keywords = ["incremental", "parsing", "tree-sitter", "sgconf"]
 categories = ["parser-implementations", "parsing", "text-editors"]
 repository = "https://github.com/angribot/tree-sitter-sgconf"
+readme = "README.md"
 edition = "2021"
 rust-version = "1.77"
 autoexamples = false
@@ -24,6 +25,7 @@ include = [
   "tests/*",
   "tree-sitter.json",
   "/LICENSE",
+  "/README.md",
 ]
 
 [lib]

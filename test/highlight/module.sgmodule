@@ -1,0 +1,12 @@
+#!name=Highlight module
+# <- keyword
+#!arguments=hostname=service.example&fallback=backup.example
+# <- keyword
+#           ^ variable.parameter
+#                   ^ punctuation.delimiter
+[General]
+# <- type
+always-real-ip = %APPEND% %hostname%
+# <- property
+#                ^ operator
+#                         ^ variable.parameter

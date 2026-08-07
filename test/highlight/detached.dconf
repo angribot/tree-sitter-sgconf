@@ -1,0 +1,4 @@
+[Ruleset Local Services]
+# <- type
+DOMAIN,service.example
+# <- keyword
