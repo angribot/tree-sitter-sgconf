@@ -6,7 +6,10 @@
       "camelcase": "Sgconf",
       "title": "Surge Configuration Language",
       "scope": "source.sgconf",
-      "path": "."
+      "path": ".",
+      "file-types": ["conf", "dconf", "sgmodule"],
+      "highlights": "queries/highlights.scm",
+      "content-regex": "(?m)^[ \\t]*(?:#!(?:MANAGED-CONFIG|FORBIDDEN-AUTO-UPGRADE|REQUIREMENT|IOS-ONLY|MACOS-ONLY|TVOS-ONLY|include)(?:[ \\t]|$)|#!(?:name|desc|system|arguments|requirement)=|\\[(?:Proxy Group|Rule|URL Rewrite|Header Rewrite|Body Rewrite|Map Local|MITM|SSID Setting|Port Forwarding|Snell Server|MTProto)\\][ \\t]*\\r?$|\\[(?:WireGuard|Tailscale|Ruleset)[ \\t]+)"
     }
   ],
   "metadata": {
