@@ -3,16 +3,1250 @@
   "name": "sgconf",
   "rules": {
     "source_file": {
-      "type": "BLANK"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_newline"
+              },
+              {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "comment"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "directive"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "_newline"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "comment"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "directive"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_section_list"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "_section_list": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_section"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section"
+              }
+            ]
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "REPEAT1",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_newline"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "_section": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "general_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "proxy_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "proxy_group_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rule_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "host_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "url_rewrite_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "header_rewrite_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "body_rewrite_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "map_local_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "mitm_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "keystore_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "ssid_setting_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "script_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "panel_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "ponte_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "port_forwarding_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "testing_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "dhcp_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "snell_server_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "mtproto_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "wireguard_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "tailscale_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "ruleset_section"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "unknown_section"
+        }
+      ]
+    },
+    "general_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[General]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "proxy_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Proxy]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "proxy_group_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Proxy Group]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "rule_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Rule]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "host_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Host]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "url_rewrite_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[URL Rewrite]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "header_rewrite_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Header Rewrite]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "body_rewrite_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Body Rewrite]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "map_local_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Map Local]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "mitm_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[MITM]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "keystore_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Keystore]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "ssid_setting_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[SSID Setting]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "script_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Script]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "panel_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Panel]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "ponte_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Ponte]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "port_forwarding_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Port Forwarding]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "testing_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Testing]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "dhcp_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[DHCP]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "snell_server_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[Snell Server]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "mtproto_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "[MTProto]"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "wireguard_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_wireguard_section_header"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "tailscale_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_tailscale_section_header"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "ruleset_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_ruleset_section_header"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "unknown_section": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_unknown_section_header"
+          },
+          "named": true,
+          "value": "section_header"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "REPEAT1",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_newline"
+                }
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_section_body_item"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "_wireguard_section_header": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "[WireGuard"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_header_separator"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "section_name"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "]"
+        }
+      ]
+    },
+    "_tailscale_section_header": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "[Tailscale"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_header_separator"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "section_name"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "]"
+        }
+      ]
+    },
+    "_ruleset_section_header": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "[Ruleset"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_header_separator"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "section_name"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "]"
+        }
+      ]
+    },
+    "_unknown_section_header": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "["
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "section_name"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "]"
+        }
+      ]
+    },
+    "_section_body_item": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "comment"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "directive"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "unknown_line"
+        }
+      ]
+    },
+    "directive": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "PATTERN",
+          "value": "[ \\t]*#![^\\r\\n]*"
+        }
+      }
+    },
+    "comment": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[ \\t]*(?:#[^\\r\\n]*|;[^\\r\\n]*|\\/\\/[^\\r\\n]*)"
+        }
+      }
+    },
+    "unknown_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": -1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[ \\t]*[^\\x5b\\r\\n \\t][^\\r\\n]*"
+        }
+      }
+    },
+    "section_name": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "[^\\]\\r\\n \\t](?:[^\\]\\r\\n]*[^\\]\\r\\n \\t])?"
+      }
+    },
+    "_header_separator": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "[ \\t]+"
+      }
+    },
+    "_newline": {
+      "type": "PATTERN",
+      "value": "\\r?\\n"
     }
   },
   "extras": [
     {
       "type": "PATTERN",
-      "value": "\\s"
+      "value": "[ \\t]"
     }
   ],
-  "conflicts": [],
+  "conflicts": [
+    [
+      "general_section"
+    ],
+    [
+      "proxy_section"
+    ],
+    [
+      "proxy_group_section"
+    ],
+    [
+      "rule_section"
+    ],
+    [
+      "host_section"
+    ],
+    [
+      "url_rewrite_section"
+    ],
+    [
+      "header_rewrite_section"
+    ],
+    [
+      "body_rewrite_section"
+    ],
+    [
+      "map_local_section"
+    ],
+    [
+      "mitm_section"
+    ],
+    [
+      "keystore_section"
+    ],
+    [
+      "ssid_setting_section"
+    ],
+    [
+      "script_section"
+    ],
+    [
+      "panel_section"
+    ],
+    [
+      "ponte_section"
+    ],
+    [
+      "port_forwarding_section"
+    ],
+    [
+      "testing_section"
+    ],
+    [
+      "dhcp_section"
+    ],
+    [
+      "snell_server_section"
+    ],
+    [
+      "mtproto_section"
+    ],
+    [
+      "wireguard_section"
+    ],
+    [
+      "tailscale_section"
+    ],
+    [
+      "ruleset_section"
+    ],
+    [
+      "unknown_section"
+    ]
+  ],
   "precedences": [],
   "externals": [],
   "inline": [],
