@@ -36,6 +36,10 @@
             "named": true
           },
           {
+            "type": "module_merge_value",
+            "named": true
+          },
+          {
             "type": "single_quoted_value",
             "named": true
           }
@@ -53,6 +57,10 @@
       "types": [
         {
           "type": "double_quoted_value",
+          "named": true
+        },
+        {
+          "type": "module_argument_placeholder",
           "named": true
         },
         {
@@ -75,7 +83,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -91,6 +135,78 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "conditional_statement",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "assignment",
+            "named": true
+          },
+          {
+            "type": "logical_rule",
+            "named": true
+          },
+          {
+            "type": "named_declaration",
+            "named": true
+          },
+          {
+            "type": "ordered_comma_statement",
+            "named": true
+          },
+          {
+            "type": "rewrite",
+            "named": true
+          },
+          {
+            "type": "rule",
+            "named": true
+          },
+          {
+            "type": "whitespace_statement",
+            "named": true
+          }
+        ]
+      },
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "condition": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "platform_requirement_prefix",
+            "named": true
+          },
+          {
+            "type": "platform_requirement_suffix",
+            "named": true
+          },
+          {
+            "type": "requirement_prefix",
+            "named": true
+          },
+          {
+            "type": "requirement_suffix",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -115,7 +231,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -132,7 +284,43 @@
   {
     "type": "double_quoted_value",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "module_argument_placeholder",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "forbidden_auto_upgrade_directive",
+    "named": true,
+    "fields": {
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "forbidden_upgrade_target",
+            "named": true
+          }
+        ]
+      }
+    }
   },
   {
     "type": "general_section",
@@ -151,7 +339,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -178,7 +402,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -213,7 +473,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -222,6 +518,47 @@
         },
         {
           "type": "unknown_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "include_directive",
+    "named": true,
+    "fields": {
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "include_target",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "include_target",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "module_argument_placeholder",
           "named": true
         }
       ]
@@ -245,7 +582,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -264,6 +637,203 @@
     }
   },
   {
+    "type": "logical_rule",
+    "named": true,
+    "fields": {
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "condition": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "logical_rule_expression",
+            "named": true
+          }
+        ]
+      },
+      "option": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "positional_value",
+            "named": true
+          }
+        ]
+      },
+      "parameter": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "named_parameter",
+            "named": true
+          }
+        ]
+      },
+      "policy": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "policy",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "logical_rule_expression",
+    "named": true,
+    "fields": {
+      "operand": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "logical_rule_operand",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "logical_operator",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "logical_rule_operand",
+    "named": true,
+    "fields": {
+      "expression": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "logical_rule_expression",
+            "named": true
+          },
+          {
+            "type": "rule_predicate",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "malformed_logical_rule",
+    "named": true,
+    "fields": {
+      "expression": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "rule_predicate",
+            "named": true
+          }
+        ]
+      },
+      "operand": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "(",
+            "named": false
+          },
+          {
+            "type": "logical_rule_operand",
+            "named": true
+          },
+          {
+            "type": "rule_predicate",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "logical_operator",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "managed_config_directive",
+    "named": true,
+    "fields": {
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "parameter": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "named_parameter",
+            "named": true
+          }
+        ]
+      },
+      "url": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "managed_config_url",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "managed_config_url",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "module_argument_placeholder",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "map_local_section",
     "named": true,
     "fields": {},
@@ -276,7 +846,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -311,7 +917,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -323,6 +965,247 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "module_argument",
+    "named": true,
+    "fields": {
+      "default": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "module_argument_default",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "module_argument_name",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "module_argument_default",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "module_argument_placeholder",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "module_arguments_directive",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "module_argument",
+            "named": true
+          }
+        ]
+      },
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "module_description_directive",
+    "named": true,
+    "fields": {
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "bare_value",
+            "named": true
+          },
+          {
+            "type": "double_quoted_value",
+            "named": true
+          },
+          {
+            "type": "single_quoted_value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "module_merge_value",
+    "named": true,
+    "fields": {
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "merge_operator",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "bare_value",
+            "named": true
+          },
+          {
+            "type": "double_quoted_value",
+            "named": true
+          },
+          {
+            "type": "single_quoted_value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "module_name_directive",
+    "named": true,
+    "fields": {
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "bare_value",
+            "named": true
+          },
+          {
+            "type": "double_quoted_value",
+            "named": true
+          },
+          {
+            "type": "single_quoted_value",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "module_requirement_directive",
+    "named": true,
+    "fields": {
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "condition": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "requirement_binary_expression",
+            "named": true
+          },
+          {
+            "type": "requirement_group",
+            "named": true
+          },
+          {
+            "type": "requirement_predicate",
+            "named": true
+          },
+          {
+            "type": "requirement_unary_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "module_system_directive",
+    "named": true,
+    "fields": {
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "bare_value",
+            "named": true
+          },
+          {
+            "type": "double_quoted_value",
+            "named": true
+          },
+          {
+            "type": "single_quoted_value",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -342,7 +1225,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -495,7 +1414,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -515,6 +1470,16 @@
   },
   {
     "type": "parameter_key",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "platform_requirement_prefix",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "platform_requirement_suffix",
     "named": true,
     "fields": {}
   },
@@ -559,7 +1524,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -586,7 +1587,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -641,7 +1678,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -672,7 +1745,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -689,6 +1798,292 @@
         }
       ]
     }
+  },
+  {
+    "type": "quoted_requirement_expression",
+    "named": true,
+    "fields": {
+      "expression": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "requirement_binary_expression",
+            "named": true
+          },
+          {
+            "type": "requirement_group",
+            "named": true
+          },
+          {
+            "type": "requirement_predicate",
+            "named": true
+          },
+          {
+            "type": "requirement_unary_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "requirement_binary_expression",
+    "named": true,
+    "fields": {
+      "left": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "requirement_binary_expression",
+            "named": true
+          },
+          {
+            "type": "requirement_group",
+            "named": true
+          },
+          {
+            "type": "requirement_predicate",
+            "named": true
+          },
+          {
+            "type": "requirement_unary_expression",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "requirement_operator",
+            "named": true
+          }
+        ]
+      },
+      "right": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "requirement_binary_expression",
+            "named": true
+          },
+          {
+            "type": "requirement_group",
+            "named": true
+          },
+          {
+            "type": "requirement_predicate",
+            "named": true
+          },
+          {
+            "type": "requirement_unary_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "requirement_group",
+    "named": true,
+    "fields": {
+      "expression": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "requirement_binary_expression",
+            "named": true
+          },
+          {
+            "type": "requirement_group",
+            "named": true
+          },
+          {
+            "type": "requirement_predicate",
+            "named": true
+          },
+          {
+            "type": "requirement_unary_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "requirement_predicate",
+    "named": true,
+    "fields": {
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "requirement_operator",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "requirement_value",
+            "named": true
+          }
+        ]
+      },
+      "variable": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "requirement_variable",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "requirement_prefix",
+    "named": true,
+    "fields": {
+      "expression": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "quoted_requirement_expression",
+            "named": true
+          },
+          {
+            "type": "requirement_binary_expression",
+            "named": true
+          },
+          {
+            "type": "requirement_group",
+            "named": true
+          },
+          {
+            "type": "requirement_predicate",
+            "named": true
+          },
+          {
+            "type": "requirement_unary_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "requirement_suffix",
+    "named": true,
+    "fields": {
+      "expression": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "quoted_requirement_expression",
+            "named": true
+          },
+          {
+            "type": "requirement_binary_expression",
+            "named": true
+          },
+          {
+            "type": "requirement_group",
+            "named": true
+          },
+          {
+            "type": "requirement_predicate",
+            "named": true
+          },
+          {
+            "type": "requirement_unary_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "requirement_unary_expression",
+    "named": true,
+    "fields": {
+      "operand": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "requirement_binary_expression",
+            "named": true
+          },
+          {
+            "type": "requirement_group",
+            "named": true
+          },
+          {
+            "type": "requirement_predicate",
+            "named": true
+          },
+          {
+            "type": "requirement_unary_expression",
+            "named": true
+          }
+        ]
+      },
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "requirement_operator",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "requirement_value",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "module_argument_placeholder",
+          "named": true
+        },
+        {
+          "type": "requirement_bare_value",
+          "named": true
+        },
+        {
+          "type": "requirement_number",
+          "named": true
+        },
+        {
+          "type": "single_quoted_value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "requirement_variable",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "rewrite",
@@ -808,6 +2203,32 @@
     "fields": {}
   },
   {
+    "type": "rule_predicate",
+    "named": true,
+    "fields": {
+      "argument": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "positional_value",
+            "named": true
+          }
+        ]
+      },
+      "kind": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "rule_kind",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "rule_section",
     "named": true,
     "fields": {},
@@ -820,7 +2241,51 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "logical_rule",
+          "named": true
+        },
+        {
+          "type": "malformed_logical_rule",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -851,7 +2316,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -882,7 +2383,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -919,7 +2456,17 @@
   {
     "type": "single_quoted_value",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "module_argument_placeholder",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "snell_server_section",
@@ -938,7 +2485,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -978,6 +2561,10 @@
           "named": true
         },
         {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
           "type": "general_section",
           "named": true
         },
@@ -990,7 +2577,15 @@
           "named": true
         },
         {
+          "type": "include_directive",
+          "named": true
+        },
+        {
           "type": "keystore_section",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
           "named": true
         },
         {
@@ -999,6 +2594,26 @@
         },
         {
           "type": "mitm_section",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -1081,7 +2696,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -1116,7 +2767,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -1147,7 +2834,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -1164,7 +2887,25 @@
   {
     "type": "unknown_line",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "double_quoted_value",
+          "named": true
+        },
+        {
+          "type": "module_argument_placeholder",
+          "named": true
+        },
+        {
+          "type": "single_quoted_value",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "unknown_section",
@@ -1180,6 +2921,38 @@
         },
         {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -1206,7 +2979,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -1277,7 +3086,43 @@
           "named": true
         },
         {
+          "type": "conditional_statement",
+          "named": true
+        },
+        {
           "type": "directive",
+          "named": true
+        },
+        {
+          "type": "forbidden_auto_upgrade_directive",
+          "named": true
+        },
+        {
+          "type": "include_directive",
+          "named": true
+        },
+        {
+          "type": "managed_config_directive",
+          "named": true
+        },
+        {
+          "type": "module_arguments_directive",
+          "named": true
+        },
+        {
+          "type": "module_description_directive",
+          "named": true
+        },
+        {
+          "type": "module_name_directive",
+          "named": true
+        },
+        {
+          "type": "module_requirement_directive",
+          "named": true
+        },
+        {
+          "type": "module_system_directive",
           "named": true
         },
         {
@@ -1292,7 +3137,75 @@
     }
   },
   {
+    "type": "\u0000",
+    "named": false
+  },
+  {
+    "type": "\"",
+    "named": false
+  },
+  {
+    "type": "#!arguments=",
+    "named": false
+  },
+  {
+    "type": "#!desc=",
+    "named": false
+  },
+  {
+    "type": "#!name=",
+    "named": false
+  },
+  {
+    "type": "#!requirement=",
+    "named": false
+  },
+  {
+    "type": "#!system=",
+    "named": false
+  },
+  {
+    "type": "%",
+    "named": false
+  },
+  {
+    "type": "&",
+    "named": false
+  },
+  {
+    "type": "'",
+    "named": false
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
+  },
+  {
     "type": "=",
+    "named": false
+  },
+  {
+    "type": "CORE_VERSION",
+    "named": false
+  },
+  {
+    "type": "DEVICE_MODEL",
+    "named": false
+  },
+  {
+    "type": "LANGUAGE",
+    "named": false
+  },
+  {
+    "type": "SYSTEM",
+    "named": false
+  },
+  {
+    "type": "SYSTEM_VERSION",
     "named": false
   },
   {
@@ -1321,6 +3234,38 @@
   },
   {
     "type": "directive",
+    "named": true
+  },
+  {
+    "type": "forbidden_upgrade_target",
+    "named": true
+  },
+  {
+    "type": "logical_operator",
+    "named": true
+  },
+  {
+    "type": "merge_operator",
+    "named": true
+  },
+  {
+    "type": "module_argument_name",
+    "named": true
+  },
+  {
+    "type": "module_argument_placeholder",
+    "named": true
+  },
+  {
+    "type": "requirement_bare_value",
+    "named": true
+  },
+  {
+    "type": "requirement_number",
+    "named": true
+  },
+  {
+    "type": "requirement_operator",
     "named": true
   },
   {

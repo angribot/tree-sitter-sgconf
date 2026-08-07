@@ -1,0 +1,209 @@
+====================================================
+profile and module directives expose dedicated syntax
+====================================================
+
+#!name=Parameterized Module
+#!desc=Routes %hostname% through "%policy%"
+#!system=mac
+#!arguments=hostname=example.com&enable_mitm=true&path=%default_path%
+#!requirement=CORE_VERSION>=6008000 && (SYSTEM == 'macOS' || SYSTEM == 'iOS')
+#!MANAGED-CONFIG https://example.com/%profile%.conf interval=86400 strict=false
+#!FORBIDDEN-AUTO-UPGRADE smart-group
+#!future=value
+
+[Proxy]
+#!include A.dconf, https://example.com/%source%.conf
+
+---
+
+(source_file
+  (module_name_directive
+    value: (bare_value))
+  (module_description_directive
+    value: (bare_value
+      (module_argument_placeholder)
+      (double_quoted_value
+        (module_argument_placeholder))))
+  (module_system_directive
+    value: (bare_value))
+  (module_arguments_directive
+    argument: (module_argument
+      name: (module_argument_name)
+      default: (module_argument_default))
+    argument: (module_argument
+      name: (module_argument_name)
+      default: (module_argument_default))
+    argument: (module_argument
+      name: (module_argument_name)
+      default: (module_argument_default
+        (module_argument_placeholder))))
+  (module_requirement_directive
+    condition: (requirement_binary_expression
+      left: (requirement_predicate
+        variable: (requirement_variable)
+        operator: (requirement_operator)
+        value: (requirement_value
+          (requirement_number)))
+      operator: (requirement_operator)
+      right: (requirement_group
+        expression: (requirement_binary_expression
+          left: (requirement_predicate
+            variable: (requirement_variable)
+            operator: (requirement_operator)
+            value: (requirement_value
+              (single_quoted_value)))
+          operator: (requirement_operator)
+          right: (requirement_predicate
+            variable: (requirement_variable)
+            operator: (requirement_operator)
+            value: (requirement_value
+              (single_quoted_value)))))))
+  (managed_config_directive
+    url: (managed_config_url
+      (module_argument_placeholder))
+    parameter: (named_parameter
+      key: (parameter_key)
+      value: (bare_value))
+    parameter: (named_parameter
+      key: (parameter_key)
+      value: (bare_value)))
+  (forbidden_auto_upgrade_directive
+    target: (forbidden_upgrade_target))
+  (directive)
+  (proxy_section
+    (section_header)
+    (include_directive
+      target: (include_target)
+      target: (include_target
+        (module_argument_placeholder)))))
+
+=========================================================
+module merge operators and placeholders remain structured
+=========================================================
+
+[General]
+skip-proxy = %INSERT% 192.168.0.0/16, %hostname%
+name = prefix-%hostname%-suffix
+quoted = "https://%hostname%/%path%?literal=100%25"
+ordinary-percent = 100%
+encoded = https://example.com/a%2Fb
+braces = {{{not-a-placeholder}}}
+[MITM]
+hostname = %APPEND% %hostname%
+[Proxy]
+Tunnel = http, %host%, username=%user%
+[Rule]
+DOMAIN,%hostname%,%policy%
+[URL Rewrite]
+^https://%old%/(.*) https://%new%/$1
+[SSID Setting]
+SSID:%network% dns-server=%dns%
+
+---
+
+(source_file
+  (general_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (module_merge_value
+        operator: (merge_operator)
+        value: (bare_value
+          (module_argument_placeholder))))
+    (assignment
+      key: (key)
+      value: (bare_value
+        (module_argument_placeholder)))
+    (assignment
+      key: (key)
+      value: (double_quoted_value
+        (module_argument_placeholder)
+        (module_argument_placeholder)))
+    (assignment
+      key: (key)
+      value: (bare_value))
+    (assignment
+      key: (key)
+      value: (bare_value))
+    (assignment
+      key: (key)
+      value: (bare_value)))
+  (mitm_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (module_merge_value
+        operator: (merge_operator)
+        value: (bare_value
+          (module_argument_placeholder)))))
+  (proxy_section
+    (section_header)
+    (named_declaration
+      name: (declaration_name)
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value
+          (module_argument_placeholder)))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value
+          (module_argument_placeholder)))))
+  (rule_section
+    (section_header)
+    (rule
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value
+          (module_argument_placeholder)))
+      policy: (policy
+        value: (bare_value
+          (module_argument_placeholder)))))
+  (url_rewrite_section
+    (section_header)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value
+          (module_argument_placeholder)))
+      argument: (positional_value
+        value: (bare_value
+          (module_argument_placeholder)))))
+  (ssid_setting_section
+    (section_header)
+    (whitespace_statement
+      argument: (positional_value
+        value: (bare_value
+          (module_argument_placeholder)))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value
+          (module_argument_placeholder))))))
+
+=====================================================
+malformed module syntax recovers at physical lines
+=====================================================
+
+#!requirement=CORE_VERSION>=
+#!include A.dconf,
+#!future-without-structure
+[General]
+next = valid
+
+---
+
+(source_file
+  (module_requirement_directive
+    (requirement_predicate
+      (requirement_variable)
+      (requirement_operator)
+      (requirement_value
+        (MISSING requirement_number))))
+  (include_directive
+    (include_target))
+  (ERROR)
+  (directive)
+  (general_section
+    (section_header)
+    (assignment
+      (key)
+      (bare_value))))

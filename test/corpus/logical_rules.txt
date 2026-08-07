@@ -1,0 +1,197 @@
+=============================================
+logical rules expose recursive matcher syntax
+=============================================
+
+[Rule]
+AND,((SRC-IP,192.168.1.110),(DOMAIN-SUFFIX,example.com)),DIRECT
+OR,((DOMAIN,example.com),(DOMAIN,example.org)),Proxy,no-resolve
+NOT,((DOMAIN-SUFFIX,example.net)),REJECT
+AND,((NOT,((SRC-IP,192.168.1.120))),(URL-REGEX,'^https?://(foo|bar),example\\.com$')),REJECT,pre-matching
+AND,((URL-REGEX,^https?://(foo|bar)\\.example/),(PROTOCOL,TCP)),DIRECT
+AND,((OR,((DOMAIN,a),(NOT,((DOMAIN,b))))),(PROTOCOL,TCP)),DIRECT
+
+---
+
+(source_file
+  (rule_section
+    (section_header)
+    (logical_rule
+      condition: (logical_rule_expression
+        operator: (logical_operator)
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value))))
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value)))))
+      policy: (policy
+        value: (bare_value)))
+    (logical_rule
+      condition: (logical_rule_expression
+        operator: (logical_operator)
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value))))
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value)))))
+      policy: (policy
+        value: (bare_value))
+      option: (positional_value
+        value: (bare_value)))
+    (logical_rule
+      condition: (logical_rule_expression
+        operator: (logical_operator)
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value)))))
+      policy: (policy
+        value: (bare_value)))
+    (logical_rule
+      condition: (logical_rule_expression
+        operator: (logical_operator)
+        operand: (logical_rule_operand
+          expression: (logical_rule_expression
+            operator: (logical_operator)
+            operand: (logical_rule_operand
+              expression: (rule_predicate
+                kind: (rule_kind)
+                argument: (positional_value
+                  value: (bare_value))))))
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (single_quoted_value)))))
+      policy: (policy
+        value: (bare_value))
+      option: (positional_value
+        value: (bare_value)))
+    (logical_rule
+      condition: (logical_rule_expression
+        operator: (logical_operator)
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value))))
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value)))))
+      policy: (policy
+        value: (bare_value)))
+    (logical_rule
+      condition: (logical_rule_expression
+        operator: (logical_operator)
+        operand: (logical_rule_operand
+          expression: (logical_rule_expression
+            operator: (logical_operator)
+            operand: (logical_rule_operand
+              expression: (rule_predicate
+                kind: (rule_kind)
+                argument: (positional_value
+                  value: (bare_value))))
+            operand: (logical_rule_operand
+              expression: (logical_rule_expression
+                operator: (logical_operator)
+                operand: (logical_rule_operand
+                  expression: (rule_predicate
+                    kind: (rule_kind)
+                    argument: (positional_value
+                      value: (bare_value))))))))
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value)))))
+      policy: (policy
+        value: (bare_value)))))
+
+===================================================
+malformed logical rules recover at physical newlines
+===================================================
+
+[Rule]
+AND,((DOMAIN,example.com),(PROTOCOL,TCP),DIRECT
+FINAL,DIRECT
+[General]
+next = valid
+
+---
+
+(source_file
+  (rule_section
+    (section_header)
+    (ERROR
+      (logical_operator)
+      (logical_rule_operand
+        (rule_predicate
+          (rule_kind)
+          (positional_value
+            (bare_value))))
+      (logical_rule_operand
+        (rule_predicate
+          (rule_kind)
+          (positional_value
+            (bare_value))))
+      (requirement_bare_value))
+    (rule
+      (rule_kind)
+      (policy
+        (bare_value))))
+  (general_section
+    (section_header)
+    (assignment
+      (key)
+      (bare_value))))
+
+============================================================
+unclosed logical operands do not consume the next statement
+============================================================
+
+[Rule]
+AND,((DOMAIN,a),(DOMAIN,b
+DOMAIN,x,DIRECT
+[General]
+ok = true
+
+---
+
+(source_file
+  (rule_section
+    (section_header)
+    (malformed_logical_rule
+      (logical_operator)
+      (logical_rule_operand
+        (rule_predicate
+          (rule_kind)
+          (positional_value
+            (bare_value))))
+      (rule_predicate
+        (rule_kind)
+        (positional_value
+          (bare_value)))
+      (MISSING ""))
+    (rule
+      (rule_kind)
+      (positional_value
+        (bare_value))
+      (policy
+        (bare_value))))
+  (general_section
+    (section_header)
+    (assignment
+      (key)
+      (bare_value))))
