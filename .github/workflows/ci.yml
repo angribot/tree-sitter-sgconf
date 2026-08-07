@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  parser:
+    name: Parser
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install the pinned Tree-sitter CLI
+        run: npm ci
+
+      - name: Regenerate parser artifacts
+        run: npm run generate
+
+      - name: Check generated parser artifacts
+        run: |
+          git diff --exit-code -- src
+          generated_changes="$(git status --porcelain --untracked-files=all -- src)"
+          if [ -n "$generated_changes" ]; then
+            printf '%s\n' "$generated_changes"
+            exit 1
+          fi
+
+      - name: Run corpus tests
+        run: npm test
+
+  rust:
+    name: Rust ${{ matrix.toolchain }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain:
+          - stable
+          - 1.77.0
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.toolchain }}
+
+      - name: Test Rust binding
+        run: cargo test --locked

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "sgconf",
+      "camelcase": "Sgconf",
+      "title": "Surge Configuration Language",
+      "scope": "source.sgconf",
+      "path": "."
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Tree-sitter grammar for Surge configuration documents",
+    "authors": [
+      {
+        "name": "Civi"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/angribot/tree-sitter-sgconf"
+    }
+  },
+  "bindings": {
+    "c": false,
+    "go": false,
+    "java": false,
+    "node": false,
+    "python": false,
+    "rust": true,
+    "swift": false,
+    "zig": false
+  }
+}
