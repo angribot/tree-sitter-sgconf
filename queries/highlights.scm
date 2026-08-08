@@ -28,6 +28,15 @@
   "#!requirement="
 ] @keyword
 
+(module_name_directive
+  value: (_) @string)
+
+(module_description_directive
+  value: (_) @string)
+
+(module_system_directive
+  value: (_) @constant.builtin)
+
 ; Keys and names
 
 [
