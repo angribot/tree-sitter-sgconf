@@ -143,6 +143,68 @@ mod tests {
     }
 
     #[test]
+    fn rewrite_arguments_preserve_bracketed_source_ranges() {
+        let source = "[URL Rewrite]\n^https?://example.com/[0-9]+ _ reject\n";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let section = tree.root_node().named_child(0).expect("missing section");
+        let rewrite = section.named_child(1).expect("missing rewrite");
+        let mut argument_cursor = rewrite.walk();
+        let arguments: Vec<_> = rewrite
+            .children_by_field_name("argument", &mut argument_cursor)
+            .map(|node| &source[node.byte_range()])
+            .collect();
+
+        assert_eq!(arguments, ["^https?://example.com/[0-9]+", "_", "reject"]);
+        assert!(!tree.root_node().has_error());
+    }
+
+    #[test]
+    fn unicode_values_preserve_exact_source_ranges() {
+        let source = "[General]\ndisplay-name = 東京 café\n[URL Rewrite]\n^https://例え.test/[一-龯]+ _ reject\n";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let root = tree.root_node();
+        let general_section = root.named_child(0).expect("missing General section");
+        let assignment = general_section
+            .named_child(1)
+            .expect("missing Unicode assignment");
+        let assignment_value = assignment
+            .child_by_field_name("value")
+            .expect("missing assignment value");
+        let rewrite_section = root.named_child(1).expect("missing URL Rewrite section");
+        let rewrite = rewrite_section.named_child(1).expect("missing rewrite");
+        let pattern = rewrite
+            .child_by_field_name("argument")
+            .expect("missing rewrite pattern");
+
+        assert_eq!(&source[assignment_value.byte_range()], "東京 café");
+        assert_eq!(&source[pattern.byte_range()], "^https://例え.test/[一-龯]+");
+        assert!(!root.has_error());
+    }
+
+    #[test]
+    fn malformed_whitespace_statement_does_not_consume_following_section() {
+        let source = "[URL Rewrite]\npattern-only\n[General]\ndisplay-name = 東京\n";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let root = tree.root_node();
+        let general_section = root
+            .named_child(1)
+            .expect("missing recovered General section");
+
+        assert_eq!(general_section.kind(), "general_section");
+        assert_eq!(
+            &source[general_section.byte_range()],
+            "[General]\ndisplay-name = 東京"
+        );
+        assert!(!general_section.has_error());
+    }
+
+    #[test]
     fn structural_tokens_are_bounded_by_physical_lines() {
         let cases = [
             ("concatenated headers", "[General][Proxy]"),

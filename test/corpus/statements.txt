@@ -335,6 +335,94 @@ http-response-jq ^https://api\.example/data '.items |= map(select(.url == "https
         key: (parameter_key)
         value: (double_quoted_value)))))
 
+===================================================================
+bracketed whitespace values preserve later section boundaries
+===================================================================
+
+[URL Rewrite]
+^https?://example.com/[0-9]+ _ reject
+[a-z] _ reject
+[Header Rewrite]
+http-response ^https://example.com/[a-z]+ header-del X-Test
+[Body Rewrite]
+http-response ^https://api.example/[0-9]+ [replacement]
+[Map Local]
+^https://example.com/[0-9]+ data=[payload]
+[SSID Setting]
+[Home] suspend=true
+[Port Forwarding]
+[::1]:6841 localhost:3306
+[General]
+loglevel = notify
+
+---
+
+(source_file
+  (url_rewrite_section
+    (section_header)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value)))
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))))
+  (header_rewrite_section
+    (section_header)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))))
+  (body_rewrite_section
+    (section_header)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      body: (positional_value
+        value: (bare_value))))
+  (map_local_section
+    (section_header)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))))
+  (ssid_setting_section
+    (section_header)
+    (whitespace_statement
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))))
+  (port_forwarding_section
+    (section_header)
+    (whitespace_statement
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))))
+  (general_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value))))
+
 ====================================================
 whitespace statements retain arguments and parameters
 ====================================================

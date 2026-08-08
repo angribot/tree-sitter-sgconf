@@ -14,6 +14,32 @@ opaque = value
       (bare_value))))
 
 =================================
+Unicode text is preserved
+=================================
+[General]
+display-name = 東京 café
+[URL Rewrite]
+^https://例え.test/[一-龯]+ https://例え.test/完了 302
+
+---
+
+(source_file
+  (general_section
+    (section_header)
+    (assignment
+      (key)
+      (bare_value)))
+  (url_rewrite_section
+    (section_header)
+    (rewrite
+      (positional_value
+        (bare_value))
+      (positional_value
+        (bare_value))
+      (positional_value
+        (bare_value)))))
+
+=================================
 LF without a final newline
 =================================
 [General]

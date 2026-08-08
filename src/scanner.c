@@ -12,6 +12,7 @@ enum TokenType {
   REQUIREMENT_OR_OPERATOR,
   REQUIREMENT_AND_OPERATOR,
   REQUIREMENT_UNARY_OPERATOR,
+  LEADING_BRACKET_VALUE_CHUNK,
 };
 
 static bool is_identifier_character(int32_t character) {
@@ -20,8 +21,18 @@ static bool is_identifier_character(int32_t character) {
          (character >= '0' && character <= '9') || character == '_';
 }
 
+static bool is_horizontal_whitespace(int32_t character) {
+  return character == ' ' || character == '\t';
+}
+
+static bool is_whitespace_value_delimiter(int32_t character) {
+  return character == 0 || character == '%' ||
+         is_horizontal_whitespace(character) || character == '\r' ||
+         character == '\n' || character == '"' || character == '\'';
+}
+
 static void skip_horizontal_whitespace(TSLexer *lexer) {
-  while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
+  while (is_horizontal_whitespace(lexer->lookahead)) {
     lexer->advance(lexer, true);
   }
 }
@@ -52,6 +63,46 @@ static bool scan_word(TSLexer *lexer, const char *word) {
 
   lexer->mark_end(lexer);
   return true;
+}
+
+static bool scan_leading_bracket_value_chunk(TSLexer *lexer) {
+  if (lexer->lookahead != '[') {
+    return false;
+  }
+
+  bool found_closing_bracket = false;
+  bool has_non_whitespace_after_closing_bracket = false;
+
+  while (!is_whitespace_value_delimiter(lexer->lookahead)) {
+    int32_t character = lexer->lookahead;
+    lexer->advance(lexer, false);
+
+    if (found_closing_bracket) {
+      has_non_whitespace_after_closing_bracket = true;
+    } else if (character == ']') {
+      found_closing_bracket = true;
+    }
+  }
+
+  lexer->mark_end(lexer);
+
+  // Let section dispatch own a physical line whose only content is a header.
+  while (lexer->lookahead != 0 && lexer->lookahead != '\r' &&
+         lexer->lookahead != '\n') {
+    int32_t character = lexer->lookahead;
+    lexer->advance(lexer, false);
+
+    if (found_closing_bracket) {
+      if (!is_horizontal_whitespace(character)) {
+        has_non_whitespace_after_closing_bracket = true;
+      }
+    } else if (character == ']') {
+      found_closing_bracket = true;
+    }
+  }
+
+  return !found_closing_bracket ||
+         has_non_whitespace_after_closing_bracket;
 }
 
 static bool scan_ruleset_logical_line_start(TSLexer *lexer) {
@@ -283,6 +334,12 @@ bool tree_sitter_sgconf_external_scanner_scan(void *payload, TSLexer *lexer,
   if (valid_symbols[RULESET_LOGICAL_LINE_START] &&
       scan_ruleset_logical_line_start(lexer)) {
     lexer->result_symbol = RULESET_LOGICAL_LINE_START;
+    return true;
+  }
+
+  if (valid_symbols[LEADING_BRACKET_VALUE_CHUNK] &&
+      scan_leading_bracket_value_chunk(lexer)) {
+    lexer->result_symbol = LEADING_BRACKET_VALUE_CHUNK;
     return true;
   }
 
