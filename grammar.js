@@ -32,6 +32,9 @@ const conditionalStatementRule = (statement, namedStatement) => ($) =>
 const whitespaceValueField = ($, name) =>
   field(name, alias($._whitespace_positional_value, $.positional_value));
 
+const leadingWhitespaceValueField = ($, name) =>
+  field(name, alias($._leading_whitespace_positional_value, $.positional_value));
+
 const whitespaceParameterField = ($) =>
   field("parameter", alias($._whitespace_named_parameter, $.named_parameter));
 
@@ -145,13 +148,14 @@ export default grammar({
     $._requirement_or_operator,
     $._requirement_and_operator,
     $._requirement_unary_operator,
+    $._leading_bracket_value_chunk,
   ],
 
   conflicts: ($) => [
     ...sectionRules($).map((sectionRule) => [sectionRule]),
     [$.key],
     [$._comma_value, $.parameter_key],
-    [$._whitespace_value, $._whitespace_unknown_value],
+    [$._leading_whitespace_bare_value, $._leading_whitespace_unknown_value],
     [$.rule_kind, $._unknown_comma_line],
     [$.declaration_name, $._unknown_declaration_line],
     [$.logical_rule_expression, $._malformed_logical_rule],
@@ -432,14 +436,14 @@ export default grammar({
 
     _url_rewrite: ($) =>
       seq(
-        whitespaceValueField($, "argument"),
+        leadingWhitespaceValueField($, "argument"),
         $._required_whitespace,
         whitespaceValueField($, "argument"),
         optional(seq($._required_whitespace, whitespaceValueField($, "argument"))),
       ),
     _header_rewrite: ($) =>
       seq(
-        whitespaceValueField($, "argument"),
+        leadingWhitespaceValueField($, "argument"),
         $._required_whitespace,
         whitespaceValueField($, "argument"),
         $._required_whitespace,
@@ -448,7 +452,7 @@ export default grammar({
       ),
     _body_rewrite: ($) =>
       seq(
-        whitespaceValueField($, "argument"),
+        leadingWhitespaceValueField($, "argument"),
         $._required_whitespace,
         whitespaceValueField($, "argument"),
         $._required_whitespace,
@@ -457,7 +461,7 @@ export default grammar({
       ),
     _map_local: ($) =>
       seq(
-        whitespaceValueField($, "argument"),
+        leadingWhitespaceValueField($, "argument"),
         repeat1(seq($._required_whitespace, whitespaceParameterField($))),
       ),
 
@@ -474,7 +478,7 @@ export default grammar({
 
     _ssid_setting: ($) =>
       seq(
-        whitespaceValueField($, "argument"),
+        leadingWhitespaceValueField($, "argument"),
         $._required_whitespace,
         whitespaceParameterField($),
         repeat(
@@ -486,7 +490,7 @@ export default grammar({
       ),
     _port_forwarding: ($) =>
       seq(
-        whitespaceValueField($, "argument"),
+        leadingWhitespaceValueField($, "argument"),
         $._required_whitespace,
         whitespaceValueField($, "argument"),
         repeat(seq($._required_whitespace, whitespaceParameterField($))),
@@ -638,6 +642,7 @@ export default grammar({
     module_argument_placeholder: (_) => token(prec(5, /%[A-Za-z0-9_]+%/)),
 
     _whitespace_positional_value: ($) => field("value", $._whitespace_value),
+    _leading_whitespace_positional_value: ($) => field("value", $._leading_whitespace_value),
     _whitespace_named_parameter: ($) =>
       seq(
         field("key", $.parameter_key),
@@ -645,17 +650,34 @@ export default grammar({
         optional(field("value", $._whitespace_parameter_value)),
       ),
     _whitespace_value: ($) => valueWithBareForm($, $._whitespace_bare_value),
+    _leading_whitespace_value: ($) => valueWithBareForm($, $._leading_whitespace_bare_value),
     _whitespace_bare_value: ($) => repeat1(withModulePlaceholders($, $._whitespace_value_chunk)),
-    _whitespace_value_chunk: (_) => token(prec(-1, /[^%\x5b \t\r\n"']+/)),
+    _leading_whitespace_bare_value: ($) =>
+      seq(
+        choice(
+          withModulePlaceholders($, $._leading_non_bracket_value_chunk),
+          $._leading_bracket_value_chunk,
+        ),
+        repeat(withModulePlaceholders($, $._whitespace_value_chunk)),
+      ),
+    _leading_non_bracket_value_chunk: (_) => token(prec(-1, /[^%\x5b \t\r\n"']+/)),
+    _whitespace_value_chunk: (_) => token(prec(-1, /[^% \t\r\n"']+/)),
     _whitespace_parameter_value: ($) => valueWithBareForm($, $._whitespace_parameter_bare_value),
     _whitespace_parameter_bare_value: ($) =>
       repeat1(withModulePlaceholders($, $._whitespace_parameter_value_chunk)),
     _whitespace_parameter_value_chunk: (_) => token(prec(-1, /[^%, \t\r\n"']+/)),
     _whitespace_unknown_line: ($) =>
       seq(
-        $._whitespace_unknown_value,
+        $._leading_whitespace_unknown_value,
         repeat(seq($._required_whitespace, $._whitespace_unknown_value)),
         optional($._inline_comment),
+      ),
+    _leading_whitespace_unknown_value: ($) =>
+      choice(
+        withModulePlaceholders($, $._leading_non_bracket_value_chunk),
+        $._leading_bracket_value_chunk,
+        $._opaque_double_quoted_value,
+        $._opaque_single_quoted_value,
       ),
     _whitespace_unknown_value: ($) =>
       choice(

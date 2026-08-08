@@ -67,6 +67,7 @@ The build 11990 revalidation produced the following expected results:
 | `surge-validated/utf8-bom.conf` | Accepted | A UTF-8 BOM is accepted. |
 | `surge-validated/crlf.conf` | Accepted | CRLF line endings are accepted. |
 | `surge-validated/no-final-newline.conf` | Accepted | A final physical newline is not required. |
+| `surge-validated/bracketed-url-rewrite.conf` | Accepted | An unquoted URL Rewrite regular expression containing a bracketed character class is accepted. |
 
 All other committed fixtures are marked `not-applicable`: module documents do not use the profile checker, managed/include examples would introduce external dependencies, and recovery fixtures intentionally do not claim Surge validity.
 

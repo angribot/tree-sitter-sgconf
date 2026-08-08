@@ -4288,7 +4288,7 @@
             "type": "ALIAS",
             "content": {
               "type": "SYMBOL",
-              "name": "_whitespace_positional_value"
+              "name": "_leading_whitespace_positional_value"
             },
             "named": true,
             "value": "positional_value"
@@ -4353,7 +4353,7 @@
             "type": "ALIAS",
             "content": {
               "type": "SYMBOL",
-              "name": "_whitespace_positional_value"
+              "name": "_leading_whitespace_positional_value"
             },
             "named": true,
             "value": "positional_value"
@@ -4430,7 +4430,7 @@
             "type": "ALIAS",
             "content": {
               "type": "SYMBOL",
-              "name": "_whitespace_positional_value"
+              "name": "_leading_whitespace_positional_value"
             },
             "named": true,
             "value": "positional_value"
@@ -4507,7 +4507,7 @@
             "type": "ALIAS",
             "content": {
               "type": "SYMBOL",
-              "name": "_whitespace_positional_value"
+              "name": "_leading_whitespace_positional_value"
             },
             "named": true,
             "value": "positional_value"
@@ -4802,7 +4802,7 @@
             "type": "ALIAS",
             "content": {
               "type": "SYMBOL",
-              "name": "_whitespace_positional_value"
+              "name": "_leading_whitespace_positional_value"
             },
             "named": true,
             "value": "positional_value"
@@ -4889,7 +4889,7 @@
             "type": "ALIAS",
             "content": {
               "type": "SYMBOL",
-              "name": "_whitespace_positional_value"
+              "name": "_leading_whitespace_positional_value"
             },
             "named": true,
             "value": "positional_value"
@@ -5886,6 +5886,14 @@
         "name": "_whitespace_value"
       }
     },
+    "_leading_whitespace_positional_value": {
+      "type": "FIELD",
+      "name": "value",
+      "content": {
+        "type": "SYMBOL",
+        "name": "_leading_whitespace_value"
+      }
+    },
     "_whitespace_named_parameter": {
       "type": "SEQ",
       "members": [
@@ -5944,6 +5952,28 @@
         }
       ]
     },
+    "_leading_whitespace_value": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "double_quoted_value"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "single_quoted_value"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_leading_whitespace_bare_value"
+          },
+          "named": true,
+          "value": "bare_value"
+        }
+      ]
+    },
     "_whitespace_bare_value": {
       "type": "REPEAT1",
       "content": {
@@ -5964,7 +5994,58 @@
         ]
       }
     },
-    "_whitespace_value_chunk": {
+    "_leading_whitespace_bare_value": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_leading_non_bracket_value_chunk"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_literal_percent"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "module_argument_placeholder"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_leading_bracket_value_chunk"
+            }
+          ]
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_whitespace_value_chunk"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_literal_percent"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "module_argument_placeholder"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "_leading_non_bracket_value_chunk": {
       "type": "TOKEN",
       "content": {
         "type": "PREC",
@@ -5972,6 +6053,17 @@
         "content": {
           "type": "PATTERN",
           "value": "[^%\\x5b \\t\\r\\n\"']+"
+        }
+      }
+    },
+    "_whitespace_value_chunk": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": -1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[^% \\t\\r\\n\"']+"
         }
       }
     },
@@ -6033,7 +6125,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "_whitespace_unknown_value"
+          "name": "_leading_whitespace_unknown_value"
         },
         {
           "type": "REPEAT",
@@ -6062,6 +6154,40 @@
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "_leading_whitespace_unknown_value": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_leading_non_bracket_value_chunk"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_literal_percent"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "module_argument_placeholder"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_leading_bracket_value_chunk"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_opaque_double_quoted_value"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_opaque_single_quoted_value"
         }
       ]
     },
@@ -6955,8 +7081,8 @@
       "parameter_key"
     ],
     [
-      "_whitespace_value",
-      "_whitespace_unknown_value"
+      "_leading_whitespace_bare_value",
+      "_leading_whitespace_unknown_value"
     ],
     [
       "rule_kind",
@@ -6996,6 +7122,10 @@
     {
       "type": "SYMBOL",
       "name": "_requirement_unary_operator"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_leading_bracket_value_chunk"
     }
   ],
   "inline": [],
