@@ -113,6 +113,46 @@ mod tests {
     }
 
     #[test]
+    fn legacy_script_fields_preserve_exact_source_ranges() {
+        let source = "[Script]\nhttp-response ^http://example.com/[0-9]+ script-path=x.js,requires-body=true\n";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let section = tree.root_node().named_child(0).expect("missing section");
+        let declaration = section
+            .named_child(1)
+            .expect("missing legacy Script declaration");
+        let script_type = declaration
+            .child_by_field_name("type")
+            .expect("missing script type");
+        let value = declaration
+            .child_by_field_name("value")
+            .expect("missing script value");
+        let mut parameter_cursor = declaration.walk();
+        let parameters: Vec<_> = declaration
+            .children_by_field_name("parameter", &mut parameter_cursor)
+            .collect();
+
+        assert_eq!(parameters.len(), 2);
+
+        let first_parameter_key = parameters[0]
+            .child_by_field_name("key")
+            .expect("missing first parameter key");
+        let first_parameter_value = parameters[0]
+            .child_by_field_name("value")
+            .expect("missing first parameter value");
+
+        assert_eq!(declaration.kind(), "legacy_script_declaration");
+        assert_eq!(&source[script_type.byte_range()], "http-response");
+        assert_eq!(&source[value.byte_range()], "^http://example.com/[0-9]+");
+        assert_eq!(&source[parameters[0].byte_range()], "script-path=x.js");
+        assert_eq!(&source[first_parameter_key.byte_range()], "script-path");
+        assert_eq!(&source[first_parameter_value.byte_range()], "x.js");
+        assert_eq!(&source[parameters[1].byte_range()], "requires-body=true");
+        assert!(!tree.root_node().has_error());
+    }
+
+    #[test]
     fn rule_fields_preserve_exact_source_ranges() {
         let source = "[Rule]\nDOMAIN-SUFFIX,example.com,Primary Policy,no-resolve,notification-text=Matched\n";
         let tree = parser()

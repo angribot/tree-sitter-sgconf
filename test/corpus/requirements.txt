@@ -96,6 +96,49 @@ DOMAIN,example.com,DIRECT //!REQUIREMENT LANGUAGE=='en-US'
             (single_quoted_value)))))))
 
 ========================================================
+line requirements wrap legacy Script declarations
+========================================================
+
+[Script]
+#!REQUIREMENT CORE_VERSION>=6008000 http-response ^https://example.com/[0-9]+ script-path=response.js # enabled response
+rule request-policy script-path=rule.js //!REQUIREMENT SYSTEM=='macOS'
+
+---
+
+(source_file
+  (script_section
+    (section_header)
+    (conditional_statement
+      condition: (requirement_prefix
+        expression: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (requirement_number))))
+      body: (legacy_script_declaration
+        type: (script_type)
+        value: (positional_value
+          value: (bare_value))
+        parameter: (named_parameter
+          key: (parameter_key)
+          value: (bare_value)))
+      comment: (comment))
+    (conditional_statement
+      body: (legacy_script_declaration
+        type: (script_type)
+        value: (positional_value
+          value: (bare_value))
+        parameter: (named_parameter
+          key: (parameter_key)
+          value: (bare_value)))
+      condition: (requirement_suffix
+        expression: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (single_quoted_value)))))))
+
+========================================================
 requirement expressions expose operators and precedence
 ========================================================
 

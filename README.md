@@ -10,7 +10,7 @@ One grammar covers the three Surge document roles:
 - **Detached profile** — sections included into another profile, commonly stored as `.dconf`.
 - **Module** — a higher-priority profile patch, commonly stored as `.sgmodule`.
 
-The parser exposes a section-dispatched, syntax-only concrete syntax tree (CST). It recognizes documented statement families, logical rules, Line Requirements, module metadata, merge operators, and placeholders. Unknown sections and lines remain visible for forward compatibility; their preservation does not mean that Surge accepts them.
+The parser exposes a section-dispatched, syntax-only concrete syntax tree (CST). It recognizes documented statement families, including modern and legacy Script declarations, logical rules, Line Requirements, module metadata, merge operators, and placeholders. Unknown sections and lines remain visible for forward compatibility; their preservation does not mean that Surge accepts them.
 
 ## Build and test
 
@@ -78,7 +78,7 @@ A `.conf` document containing only generic headers such as `[General]` may inten
 
 The [Surge manual](https://manual.nssurge.com/llms.txt) is the public syntax authority. Scrubbed local `surge-cli --check` results supplement the manual where executable behavior matters; tests never require Surge or network access.
 
-Named CST nodes and field names are a public compatibility surface. Changes to them require deliberate review because downstream queries and tools may depend on those names. Error recovery is line-bounded where practical so malformed or future syntax does not consume later valid statements or sections. Recognizable incomplete named declarations, Rule and inline Ruleset entries, rewrite statements, and whitespace-delimited statements produce localized `ERROR` nodes; genuinely unknown shapes remain available through `unknown_section`, `unknown_line`, and generic `directive` nodes without claiming semantic validity.
+Named CST nodes and field names are a public compatibility surface. Changes to them require deliberate review because downstream queries and tools may depend on those names. Error recovery is line-bounded where practical so malformed or future syntax does not consume later valid statements or sections. Recognizable incomplete named and legacy Script declarations, Rule and inline Ruleset entries, rewrite statements, and whitespace-delimited statements produce localized `ERROR` nodes; genuinely unknown shapes remain available through `unknown_section`, `unknown_line`, and generic `directive` nodes without claiming semantic validity.
 
 ## Non-goals
 
