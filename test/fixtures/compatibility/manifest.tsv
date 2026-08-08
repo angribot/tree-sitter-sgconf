@@ -1,6 +1,7 @@
 # fixture	parser	surge-cli	top-level CST	source or rationale
 documented/profile.conf	clean	accepted	comment,comment,comment,general_section,proxy_section,proxy_group_section,rule_section	https://manual.nssurge.com/profile/format.html
 documented/inline-ruleset.conf	clean	accepted	general_section,ruleset_section,rule_section	https://manual.nssurge.com/rule/ruleset.html
+documented/logical-inline-ruleset.conf	clean	accepted	general_section,ruleset_section,rule_section	https://manual.nssurge.com/rule/ruleset.html,https://manual.nssurge.com/rule/logical-rule.html
 documented/module.sgmodule	clean	not-applicable	module_name_directive,module_description_directive,module_system_directive,module_arguments_directive,module_requirement_directive,general_section	https://manual.nssurge.com/profile/module.html
 documented/directives.conf	clean	not-applicable	managed_config_directive,forbidden_auto_upgrade_directive,general_section,proxy_section,rule_section	https://manual.nssurge.com/profile/managed-profile.html,https://manual.nssurge.com/profile/format.html
 documented/large-rule-profile.conf	clean	accepted	rule_section	https://manual.nssurge.com/rules/overview.html

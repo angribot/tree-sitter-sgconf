@@ -59,6 +59,7 @@ The build 11990 revalidation produced the following expected results:
 | --- | --- | --- |
 | `documented/profile.conf` | Accepted | An LF-terminated representative profile with all documented full-line comment forms, an inline comment, and escaped quoted data is accepted. |
 | `documented/inline-ruleset.conf` | Accepted | A named inline Ruleset section is accepted. |
+| `documented/logical-inline-ruleset.conf` | Accepted | A policy-free recursive logical entry in a named inline Ruleset section is accepted. |
 | `documented/large-rule-profile.conf` | Accepted | The synthetic 10,001-rule profile is accepted. |
 | `surge-validated/repeated-sections.conf` | Accepted | Repeated sections are accepted and remain separate parser nodes. |
 | `surge-validated/unknown-extensions.conf` | Accepted | An unknown key and section are accepted by this build and preserved by the parser. |

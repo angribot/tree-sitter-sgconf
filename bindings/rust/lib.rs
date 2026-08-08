@@ -244,6 +244,46 @@ mod tests {
     }
 
     #[test]
+    fn ruleset_logical_rule_fields_preserve_recursive_source_ranges() {
+        let source = "[Ruleset Combined]\nAND,((DOMAIN,example.com),(NOT,((PROTOCOL,TCP))))\n";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let section = tree.root_node().named_child(0).expect("missing section");
+        let rule = section
+            .named_child(1)
+            .expect("missing Ruleset logical rule");
+        let condition = rule
+            .child_by_field_name("condition")
+            .expect("missing logical condition");
+        let operator = condition
+            .child_by_field_name("operator")
+            .expect("missing logical operator");
+        let mut operand_cursor = condition.walk();
+        let operands: Vec<_> = condition
+            .children_by_field_name("operand", &mut operand_cursor)
+            .collect();
+        let nested_expression = operands[1]
+            .child_by_field_name("expression")
+            .expect("missing nested logical expression");
+
+        assert_eq!(rule.kind(), "ruleset_logical_rule");
+        assert_eq!(
+            &source[condition.byte_range()],
+            "AND,((DOMAIN,example.com),(NOT,((PROTOCOL,TCP))))"
+        );
+        assert_eq!(&source[operator.byte_range()], "AND");
+        assert_eq!(&source[operands[0].byte_range()], "(DOMAIN,example.com)");
+        assert_eq!(nested_expression.kind(), "logical_rule_expression");
+        assert_eq!(
+            &source[nested_expression.byte_range()],
+            "NOT,((PROTOCOL,TCP))"
+        );
+        assert!(rule.child_by_field_name("policy").is_none());
+        assert!(!tree.root_node().has_error());
+    }
+
+    #[test]
     fn requirement_fields_preserve_expression_and_body_ranges() {
         let source = "[General]\n#!REQUIREMENT \"CORE_VERSION>=6008000 AND SYSTEM=='macOS'\" feature = enabled\n";
         let tree = parser()
