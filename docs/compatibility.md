@@ -5,7 +5,7 @@ This record distinguishes public Surge syntax from behavior observed in one Surg
 ## Authorities and baselines
 
 - Official manual index: <https://manual.nssurge.com/llms.txt>
-- Manual reviewed: 2026-08-07 UTC
+- Manual reviewed: 2026-08-08 UTC
 - Generated parser baseline: Tree-sitter CLI 0.26.11
 - Accepted initial research baseline: Surge Mac 6.8, build 11980, core 6008000
 - Committed-fixture revalidation: Surge Mac 6.8.0, build 11990, core 6008000, on 2026-08-07 UTC
@@ -27,11 +27,11 @@ The source column links each fixture to its most specific applicable page. The b
 | Claim family | Official source |
 | --- | --- |
 | Document structure, section inventory, assignments, comments, quoting, detached profiles, and Line Requirements | [Profile Format](https://manual.nssurge.com/profile/format.html) |
-| Proxy policy and policy group declarations | [Proxy Policy](https://manual.nssurge.com/policy/proxy.html) and [Policy Group](https://manual.nssurge.com/policy-group/group.html) |
-| Ordered rules, recursive logical rules, and dynamic inline Ruleset sections | [Rules Overview](https://manual.nssurge.com/rules/overview.html), [Logical Rules](https://manual.nssurge.com/rule/logical-rule.html), and [Ruleset](https://manual.nssurge.com/rule/ruleset.html) |
-| URL, header, body, and local-response rewrite statements | [URL Rewrite](https://manual.nssurge.com/http-processing/url-rewrite.html), [Header Rewrite](https://manual.nssurge.com/http-processing/header-rewrite.html), [Body Rewrite](https://manual.nssurge.com/http-processing/body-rewrite.html), and [Map Local](https://manual.nssurge.com/http-processing/mock.html) |
-| Script, panel, subnet, and port-forwarding declarations | [Scripting](https://manual.nssurge.com/scripting/common.html), [Panel](https://manual.nssurge.com/others/panel.html), [Subnet Settings](https://manual.nssurge.com/others/subnet-settings.html), and [Port Forwarding](https://manual.nssurge.com/others/port-forwarding.html) |
-| WireGuard, Tailscale, and incoming-service sections | [WireGuard](https://manual.nssurge.com/policy/wireguard.html), [Tailscale](https://manual.nssurge.com/policy/tailscale.html), [MTProto](https://manual.nssurge.com/others/mtproto.html), and the [Profile Format section inventory](https://manual.nssurge.com/profile/format.html) |
+| Proxy policy and policy group declarations | [Policy Overview](https://manual.nssurge.com/policies/overview.html) and [Policy Group Overview](https://manual.nssurge.com/policy-groups/overview.html) |
+| Ordered rules, recursive logical rules, and dynamic inline Ruleset sections | [Rules Overview](https://manual.nssurge.com/rules/overview.html), [Logical Rules](https://manual.nssurge.com/rules/logical.html), and [Ruleset](https://manual.nssurge.com/rules/ruleset.html) |
+| URL, header, body, and local-response rewrite statements | [URL Rewrite](https://manual.nssurge.com/http/url-rewrite.html), [Header Rewrite](https://manual.nssurge.com/http/header-rewrite.html), [Body Rewrite](https://manual.nssurge.com/http/body-rewrite.html), and [Map Local](https://manual.nssurge.com/http/map-local.html) |
+| Script, panel, subnet, and port-forwarding declarations | [Scripting Overview](https://manual.nssurge.com/scripting/overview.html), [Information Panel](https://manual.nssurge.com/tools/panel.html), [Subnet Settings](https://manual.nssurge.com/features/subnet-settings.html), and [Port Forwarding](https://manual.nssurge.com/features/port-forwarding.html) |
+| WireGuard, Tailscale, and incoming-service sections | [WireGuard](https://manual.nssurge.com/policies/wireguard.html), [Tailscale](https://manual.nssurge.com/policies/tailscale.html), [MTProto](https://manual.nssurge.com/features/mtproto.html), and the [Profile Format section inventory](https://manual.nssurge.com/profile/format.html) |
 | Managed-profile, Requirement, and forbidden-upgrade directives | [Managed Profile](https://manual.nssurge.com/profile/managed-profile.html) |
 | Module metadata, merge operators, and placeholders | [Module](https://manual.nssurge.com/profile/module.html) |
 
