@@ -122,6 +122,82 @@ second = value
       value: (bare_value))))
 
 =================================
+dynamic-family prefix collisions remain unknown
+=================================
+
+[RulesetX]
+opaque = ruleset-x
+[Ruleset-Extension]
+opaque ruleset extension
+[WireGuardX]
+opaque = wireguard-x
+[TailscaleX]
+opaque tailscale-x
+[Ruleset]
+opaque bare ruleset
+[WireGuard]
+opaque = bare wireguard
+[Tailscale]
+opaque bare tailscale
+[Ruleset   ]
+opaque spaced ruleset
+[WireGuard   ]
+opaque spaced wireguard
+[Tailscale   ]
+opaque spaced tailscale
+[General]
+recovered = true
+
+---
+
+(source_file
+  (unknown_section
+    (section_header
+      name: (section_name))
+    (unknown_line))
+  (unknown_section
+    (section_header
+      name: (section_name))
+    (unknown_line))
+  (unknown_section
+    (section_header
+      name: (section_name))
+    (unknown_line))
+  (unknown_section
+    (section_header
+      name: (section_name))
+    (unknown_line))
+  (unknown_section
+    (section_header
+      name: (section_name))
+    (unknown_line))
+  (unknown_section
+    (section_header
+      name: (section_name))
+    (unknown_line))
+  (unknown_section
+    (section_header
+      name: (section_name))
+    (unknown_line))
+  (unknown_section
+    (section_header
+      name: (section_name))
+    (unknown_line))
+  (unknown_section
+    (section_header
+      name: (section_name))
+    (unknown_line))
+  (unknown_section
+    (section_header
+      name: (section_name))
+    (unknown_line))
+  (general_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value))))
+
+=================================
 full-line comments and directives are distinct
 =================================
 
@@ -279,6 +355,33 @@ FINAL,DIRECT
     (section_header
       name: (section_name)
       (ERROR)))
+  (rule_section
+    (section_header)
+    (rule
+      kind: (rule_kind)
+      policy: (policy
+        value: (bare_value)))))
+
+=================================
+malformed dynamic headers preserve following statements and sections
+=================================
+
+[Ruleset Broken
+DOMAIN,valid.example
+[Rule]
+FINAL,DIRECT
+
+---
+
+(source_file
+  (ruleset_section
+    (section_header
+      name: (section_name)
+      (MISSING "]"))
+    (ordered_comma_statement
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value))))
   (rule_section
     (section_header)
     (rule

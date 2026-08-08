@@ -2207,7 +2207,12 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_wireguard_section_prefix"
+          },
+          "named": false,
           "value": "[WireGuard"
         },
         {
@@ -2232,7 +2237,12 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_tailscale_section_prefix"
+          },
+          "named": false,
           "value": "[Tailscale"
         },
         {
@@ -2257,7 +2267,12 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_ruleset_section_prefix"
+          },
+          "named": false,
           "value": "[Ruleset"
         },
         {
@@ -7566,6 +7581,18 @@
     {
       "type": "SYMBOL",
       "name": "_physical_line_end"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_wireguard_section_prefix"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_tailscale_section_prefix"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_ruleset_section_prefix"
     },
     {
       "type": "SYMBOL",
