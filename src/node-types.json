@@ -170,6 +170,10 @@
             "named": true
           },
           {
+            "type": "ruleset_logical_rule",
+            "named": true
+          },
+          {
             "type": "whitespace_statement",
             "named": true
           }
@@ -2304,6 +2308,32 @@
     }
   },
   {
+    "type": "ruleset_logical_rule",
+    "named": true,
+    "fields": {
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "condition": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "logical_rule_expression",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "ruleset_section",
     "named": true,
     "fields": {},
@@ -2332,6 +2362,10 @@
           "named": true
         },
         {
+          "type": "malformed_logical_rule",
+          "named": true
+        },
+        {
           "type": "managed_config_directive",
           "named": true
         },
@@ -2357,6 +2391,10 @@
         },
         {
           "type": "ordered_comma_statement",
+          "named": true
+        },
+        {
+          "type": "ruleset_logical_rule",
           "named": true
         },
         {

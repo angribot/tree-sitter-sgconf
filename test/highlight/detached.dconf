@@ -2,3 +2,5 @@
 # <- type
 DOMAIN,service.example
 # <- keyword
+AND,((DOMAIN,example.com),(PROTOCOL,TCP))
+# <- operator

@@ -73,12 +73,15 @@ const ruleSectionBodyItem = ($) =>
     alias(prec.dynamic(-2, $._unknown_comma_line), $.unknown_line),
   );
 
-const orderedCommaSectionBodyItem = ($) =>
+const rulesetSectionBodyItem = ($) =>
   choice(
     directiveBodyItem($),
+    alias($._conditional_ruleset_logical_rule, $.conditional_statement),
     alias($._conditional_ordered_comma_statement, $.conditional_statement),
+    prec.dynamic(2, $.ruleset_logical_rule),
     prec.dynamic(1, $.ordered_comma_statement),
-    alias(prec.dynamic(-1, $._unknown_comma_line), $.unknown_line),
+    prec.dynamic(3, alias($._ruleset_malformed_logical_rule, $.malformed_logical_rule)),
+    alias(prec.dynamic(-2, $._unknown_comma_line), $.unknown_line),
   );
 
 const structuredSectionBodyItem = (completeRule, conditionalRule, namedStatement) => ($) =>
@@ -137,6 +140,7 @@ export default grammar({
 
   externals: ($) => [
     $._logical_line_end,
+    $._ruleset_logical_line_start,
     $._requirement_comparison_operator,
     $._requirement_or_operator,
     $._requirement_and_operator,
@@ -150,7 +154,7 @@ export default grammar({
     [$._whitespace_value, $._whitespace_unknown_value],
     [$.rule_kind, $._unknown_comma_line],
     [$.declaration_name, $._unknown_declaration_line],
-    [$.logical_rule_expression, $.malformed_logical_rule],
+    [$.logical_rule_expression, $._malformed_logical_rule],
   ],
 
   rules: {
@@ -229,7 +233,7 @@ export default grammar({
     mtproto_section: fixedSection("[MTProto]", assignmentSectionBodyItem),
     wireguard_section: namedSection(($) => $._wireguard_section_header, assignmentSectionBodyItem),
     tailscale_section: namedSection(($) => $._tailscale_section_header, assignmentSectionBodyItem),
-    ruleset_section: namedSection(($) => $._ruleset_section_header, orderedCommaSectionBodyItem),
+    ruleset_section: namedSection(($) => $._ruleset_section_header, rulesetSectionBodyItem),
     unknown_section: namedSection(($) => $._unknown_section_header),
 
     _wireguard_section_header: dynamicHeader("[WireGuard"),
@@ -313,6 +317,14 @@ export default grammar({
         field("policy", $.policy),
         repeat(seq($._comma_separator, $._rule_option)),
       ),
+
+    ruleset_logical_rule: statementRule(($) => $._ruleset_logical_rule),
+    _conditional_ruleset_logical_rule: conditionalStatementRule(
+      ($) => $._ruleset_logical_rule,
+      ($) => $.ruleset_logical_rule,
+    ),
+    _ruleset_logical_rule: ($) =>
+      seq($._ruleset_logical_line_start, field("condition", $.logical_rule_expression)),
     logical_rule_expression: ($) =>
       choice(
         seq(
@@ -335,7 +347,10 @@ export default grammar({
       ),
     logical_rule_operand: ($) =>
       seq("(", field("expression", choice($.logical_rule_expression, $.rule_predicate)), ")"),
-    malformed_logical_rule: ($) =>
+    malformed_logical_rule: ($) => $._malformed_logical_rule,
+    _ruleset_malformed_logical_rule: ($) =>
+      seq($._ruleset_logical_line_start, $._malformed_logical_rule),
+    _malformed_logical_rule: ($) =>
       seq(
         field("operator", alias(choice("AND", "OR", "NOT"), $.logical_operator)),
         $._comma_separator,
@@ -379,7 +394,7 @@ export default grammar({
         ),
         ")",
       ),
-    _logical_value_chunk: (_) => token(prec(-1, /[^%,() \t\r\n"']+/)),
+    _logical_value_chunk: (_) => token(prec(-1, /(?:\\[()]|[^%,() \t\r\n"'])+/)),
     // The scanner emits the preceding zero-width boundary; this required,
     // unlexable token makes the localized malformed node carry a MISSING error.
     _logical_error_sentinel: (_) => "\0",

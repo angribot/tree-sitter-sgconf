@@ -3,10 +3,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-// The line-end token lets malformed logical rules recover before a physical
-// newline instead of searching the following statement for closing delimiters.
+// External boundaries keep malformed logical rules on one physical line and
+// only enable Ruleset logical syntax for policy-free or unterminated forms.
 enum TokenType {
   LOGICAL_LINE_END,
+  RULESET_LOGICAL_LINE_START,
   REQUIREMENT_COMPARISON_OPERATOR,
   REQUIREMENT_OR_OPERATOR,
   REQUIREMENT_AND_OPERATOR,
@@ -34,19 +35,119 @@ static bool scan_character(TSLexer *lexer, int32_t expected) {
   return true;
 }
 
-static bool scan_word(TSLexer *lexer, const char *word) {
-  for (const char *character = word; *character != '\0'; character++) {
+static bool scan_literal(TSLexer *lexer, const char *literal) {
+  for (const char *character = literal; *character != '\0'; character++) {
     if (!scan_character(lexer, *character)) {
       return false;
     }
   }
 
-  if (is_identifier_character(lexer->lookahead)) {
+  return true;
+}
+
+static bool scan_word(TSLexer *lexer, const char *word) {
+  if (!scan_literal(lexer, word) || is_identifier_character(lexer->lookahead)) {
     return false;
   }
 
   lexer->mark_end(lexer);
   return true;
+}
+
+static bool scan_ruleset_logical_line_start(TSLexer *lexer) {
+  lexer->mark_end(lexer);
+
+  bool has_logical_operator =
+      (lexer->lookahead == 'A' && scan_literal(lexer, "AND")) ||
+      (lexer->lookahead == 'O' && scan_literal(lexer, "OR")) ||
+      (lexer->lookahead == 'N' && scan_literal(lexer, "NOT"));
+  if (!has_logical_operator || !scan_character(lexer, ',')) {
+    return false;
+  }
+
+  skip_horizontal_whitespace(lexer);
+  if (!scan_character(lexer, '(')) {
+    return false;
+  }
+
+  skip_horizontal_whitespace(lexer);
+  if (lexer->lookahead != '(') {
+    return false;
+  }
+
+  unsigned depth = 1;
+  int32_t quote = 0;
+  bool escaped = false;
+
+  while (lexer->lookahead != 0 && lexer->lookahead != '\r' &&
+         lexer->lookahead != '\n') {
+    int32_t character = lexer->lookahead;
+    lexer->advance(lexer, false);
+
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+
+    if (character == '\\') {
+      escaped = true;
+      continue;
+    }
+
+    if (quote != 0) {
+      if (character == quote) {
+        quote = 0;
+      }
+      continue;
+    }
+
+    if (character == '\'' || character == '"') {
+      quote = character;
+      continue;
+    }
+
+    if (character == '(') {
+      depth++;
+      continue;
+    }
+
+    if (character != ')') {
+      continue;
+    }
+
+    if (depth == 0) {
+      return false;
+    }
+
+    depth--;
+    if (depth == 0) {
+      break;
+    }
+  }
+
+  if (depth > 0) {
+    return true;
+  }
+
+  bool has_trailing_whitespace =
+      lexer->lookahead == ' ' || lexer->lookahead == '\t';
+  skip_horizontal_whitespace(lexer);
+
+  if (lexer->lookahead == 0 || lexer->lookahead == '\r' ||
+      lexer->lookahead == '\n') {
+    return true;
+  }
+
+  if (!has_trailing_whitespace) {
+    return false;
+  }
+
+  if (lexer->lookahead == '#' || lexer->lookahead == ';') {
+    return true;
+  }
+
+  return lexer->lookahead == '/' && scan_character(lexer, '/') &&
+         scan_character(lexer, '/');
 }
 
 static bool scan_comparison_operator(TSLexer *lexer) {
@@ -176,6 +277,12 @@ bool tree_sitter_sgconf_external_scanner_scan(void *payload, TSLexer *lexer,
   if (valid_symbols[LOGICAL_LINE_END] &&
       (lexer->lookahead == '\r' || lexer->lookahead == '\n')) {
     lexer->result_symbol = LOGICAL_LINE_END;
+    return true;
+  }
+
+  if (valid_symbols[RULESET_LOGICAL_LINE_START] &&
+      scan_ruleset_logical_line_start(lexer)) {
+    lexer->result_symbol = RULESET_LOGICAL_LINE_START;
     return true;
   }
 

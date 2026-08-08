@@ -1,0 +1,224 @@
+============================================================
+inline Ruleset logical entries expose recursive matcher syntax
+============================================================
+
+[Ruleset Combined]
+AND,((DOMAIN,example.com),(PROTOCOL,TCP))
+OR,((DOMAIN,example.org),(NOT,((PROTOCOL,UDP))))
+NOT,((DOMAIN-SUFFIX,example.net))
+
+---
+
+(source_file
+  (ruleset_section
+    (section_header
+      name: (section_name))
+    (ruleset_logical_rule
+      condition: (logical_rule_expression
+        operator: (logical_operator)
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value))))
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value))))))
+    (ruleset_logical_rule
+      condition: (logical_rule_expression
+        operator: (logical_operator)
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value))))
+        operand: (logical_rule_operand
+          expression: (logical_rule_expression
+            operator: (logical_operator)
+            operand: (logical_rule_operand
+              expression: (rule_predicate
+                kind: (rule_kind)
+                argument: (positional_value
+                  value: (bare_value))))))))
+    (ruleset_logical_rule
+      condition: (logical_rule_expression
+        operator: (logical_operator)
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value))))))))
+
+============================================================
+inline Ruleset logical entries preserve Line Requirements
+============================================================
+
+[Ruleset Conditional]
+#!REQUIREMENT CORE_VERSION>=6008000 NOT,((DOMAIN,example.com))
+NOT,((DOMAIN,example.org)) //!REQUIREMENT SYSTEM=='iOS'
+#!MACOS-ONLY NOT,((PROTOCOL,TCP))
+NOT,((PROTOCOL,UDP)) #!TVOS-ONLY
+
+---
+
+(source_file
+  (ruleset_section
+    (section_header
+      name: (section_name))
+    (conditional_statement
+      condition: (requirement_prefix
+        expression: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (requirement_number))))
+      body: (ruleset_logical_rule
+        condition: (logical_rule_expression
+          operator: (logical_operator)
+          operand: (logical_rule_operand
+            expression: (rule_predicate
+              kind: (rule_kind)
+              argument: (positional_value
+                value: (bare_value)))))))
+    (conditional_statement
+      body: (ruleset_logical_rule
+        condition: (logical_rule_expression
+          operator: (logical_operator)
+          operand: (logical_rule_operand
+            expression: (rule_predicate
+              kind: (rule_kind)
+              argument: (positional_value
+                value: (bare_value))))))
+      condition: (requirement_suffix
+        expression: (requirement_predicate
+          variable: (requirement_variable)
+          operator: (requirement_operator)
+          value: (requirement_value
+            (single_quoted_value)))))
+    (conditional_statement
+      condition: (platform_requirement_prefix)
+      body: (ruleset_logical_rule
+        condition: (logical_rule_expression
+          operator: (logical_operator)
+          operand: (logical_rule_operand
+            expression: (rule_predicate
+              kind: (rule_kind)
+              argument: (positional_value
+                value: (bare_value)))))))
+    (conditional_statement
+      body: (ruleset_logical_rule
+        condition: (logical_rule_expression
+          operator: (logical_operator)
+          operand: (logical_rule_operand
+            expression: (rule_predicate
+              kind: (rule_kind)
+              argument: (positional_value
+                value: (bare_value))))))
+      condition: (platform_requirement_suffix))))
+
+====================================================================
+malformed inline Ruleset logical entries recover at physical newlines
+====================================================================
+
+[Ruleset Recovery]
+AND,((DOMAIN,a),(DOMAIN,b
+DOMAIN,x
+[General]
+next = valid
+
+---
+
+(source_file
+  (ruleset_section
+    (section_header
+      name: (section_name))
+    (malformed_logical_rule
+      operator: (logical_operator)
+      operand: (logical_rule_operand
+        expression: (rule_predicate
+          kind: (rule_kind)
+          argument: (positional_value
+            value: (bare_value))))
+      expression: (rule_predicate
+        kind: (rule_kind)
+        argument: (positional_value
+          value: (bare_value)))
+      (MISSING ""))
+    (ordered_comma_statement
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value))))
+  (general_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value))))
+
+================================================================
+logical-looking ordinary Ruleset entries retain their public CST
+================================================================
+
+[Ruleset Compatibility]
+AND,foo,bar
+AND,((DOMAIN,a),(DOMAIN,b)),DIRECT
+AND,(foo,bar)
+
+---
+
+(source_file
+  (ruleset_section
+    (section_header
+      name: (section_name))
+    (ordered_comma_statement
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value)))
+    (ordered_comma_statement
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value)))
+    (ordered_comma_statement
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value)))))
+
+===============================================================
+escaped parentheses remain part of logical predicate values
+===============================================================
+
+[Ruleset Escaped Parenthesis]
+AND,((URL-REGEX,^foo\(bar),(DOMAIN,example.test))
+
+---
+
+(source_file
+  (ruleset_section
+    (section_header
+      name: (section_name))
+    (ruleset_logical_rule
+      condition: (logical_rule_expression
+        operator: (logical_operator)
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value))))
+        operand: (logical_rule_operand
+          expression: (rule_predicate
+            kind: (rule_kind)
+            argument: (positional_value
+              value: (bare_value))))))))
