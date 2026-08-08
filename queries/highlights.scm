@@ -47,7 +47,10 @@
 
 ; Rule and Requirement vocabulary
 
-(rule_kind) @keyword
+[
+  (rule_kind)
+  (script_type)
+] @keyword
 
 [
   (logical_operator)
@@ -59,6 +62,13 @@
 (requirement_number) @number
 
 ; Values with an unambiguous string role
+
+(legacy_script_declaration
+  value: (positional_value) @string)
+
+(legacy_script_declaration
+  parameter: (named_parameter
+    value: (_) @string))
 
 [
   (double_quoted_value)
@@ -84,5 +94,12 @@
   "="
   "&"
 ] @punctuation.delimiter
+
+(legacy_script_declaration
+  parameter: (named_parameter
+    "=" @operator))
+
+(legacy_script_declaration
+  "," @punctuation.delimiter)
 
 "%" @punctuation.special

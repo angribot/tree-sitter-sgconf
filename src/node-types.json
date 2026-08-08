@@ -150,6 +150,10 @@
             "named": true
           },
           {
+            "type": "legacy_script_declaration",
+            "named": true
+          },
+          {
             "type": "logical_rule",
             "named": true
           },
@@ -638,6 +642,52 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "legacy_script_declaration",
+    "named": true,
+    "fields": {
+      "comment": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      },
+      "parameter": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "named_parameter",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "script_type",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "positional_value",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -2437,6 +2487,10 @@
           "named": true
         },
         {
+          "type": "legacy_script_declaration",
+          "named": true
+        },
+        {
           "type": "managed_config_directive",
           "named": true
         },
@@ -2474,6 +2528,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "script_type",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "section_header",
@@ -3223,6 +3282,10 @@
     "named": false
   },
   {
+    "type": ",",
+    "named": false
+  },
+  {
     "type": "=",
     "named": false
   },
@@ -3271,12 +3334,36 @@
     "named": true
   },
   {
+    "type": "cron",
+    "named": false
+  },
+  {
     "type": "directive",
     "named": true
   },
   {
+    "type": "dns",
+    "named": false
+  },
+  {
+    "type": "event",
+    "named": false
+  },
+  {
     "type": "forbidden_upgrade_target",
     "named": true
+  },
+  {
+    "type": "generic",
+    "named": false
+  },
+  {
+    "type": "http-request",
+    "named": false
+  },
+  {
+    "type": "http-response",
+    "named": false
   },
   {
     "type": "logical_operator",
@@ -3305,6 +3392,10 @@
   {
     "type": "requirement_operator",
     "named": true
+  },
+  {
+    "type": "rule",
+    "named": false
   },
   {
     "type": "section_name",

@@ -1303,6 +1303,23 @@
                     "type": "ALIAS",
                     "content": {
                       "type": "SYMBOL",
+                      "name": "_conditional_legacy_script_declaration"
+                    },
+                    "named": true,
+                    "value": "conditional_statement"
+                  },
+                  {
+                    "type": "PREC_DYNAMIC",
+                    "value": 2,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "legacy_script_declaration"
+                    }
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
                       "name": "_conditional_named_declaration"
                     },
                     "named": true,
@@ -2689,6 +2706,232 @@
             "type": "SYMBOL",
             "name": "positional_value"
           }
+        }
+      ]
+    },
+    "legacy_script_declaration": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_legacy_script_declaration"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "comment",
+              "content": {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_inline_comment"
+                },
+                "named": true,
+                "value": "comment"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "_conditional_legacy_script_declaration": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "condition",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "requirement_prefix"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "platform_requirement_prefix"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "body",
+              "content": {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_legacy_script_declaration"
+                },
+                "named": true,
+                "value": "legacy_script_declaration"
+              }
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "comment",
+                  "content": {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_inline_comment"
+                    },
+                    "named": true,
+                    "value": "comment"
+                  }
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "body",
+              "content": {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_legacy_script_declaration"
+                },
+                "named": true,
+                "value": "legacy_script_declaration"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "condition",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "requirement_suffix"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "platform_requirement_suffix"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "_legacy_script_declaration": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "type",
+          "content": {
+            "type": "SYMBOL",
+            "name": "script_type"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_required_whitespace"
+        },
+        {
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_leading_whitespace_positional_value"
+            },
+            "named": true,
+            "value": "positional_value"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_required_whitespace"
+        },
+        {
+          "type": "FIELD",
+          "name": "parameter",
+          "content": {
+            "type": "SYMBOL",
+            "name": "named_parameter"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "_comma_separator"
+                },
+                "named": false,
+                "value": ","
+              },
+              {
+                "type": "FIELD",
+                "name": "parameter",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "named_parameter"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "script_type": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "http-request"
+        },
+        {
+          "type": "STRING",
+          "value": "http-response"
+        },
+        {
+          "type": "STRING",
+          "value": "rule"
+        },
+        {
+          "type": "STRING",
+          "value": "dns"
+        },
+        {
+          "type": "STRING",
+          "value": "event"
+        },
+        {
+          "type": "STRING",
+          "value": "cron"
+        },
+        {
+          "type": "STRING",
+          "value": "generic"
         }
       ]
     },

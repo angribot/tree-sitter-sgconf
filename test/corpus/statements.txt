@@ -198,6 +198,81 @@ Status = title="Panel #1", content="Ready\n# still content", style=info
         value: (bare_value)))))
 
 ====================================================
+legacy script declarations expose types values and parameters
+====================================================
+
+[Script]
+http-request ^https://example.com/[a-z]+ script-path=request.js
+http-response ^http://example.com/[0-9]+ script-path=x.js,requires-body=true # response hook
+rule request-policy script-path=rule.js
+dns resolver script-path=dns.js
+event network-changed script-path=event.js
+cron "0 8 * * *" script-path=cron.js
+generic manual-task script-path=generic.js,argument="run now"
+
+---
+
+(source_file
+  (script_section
+    (section_header)
+    (legacy_script_declaration
+      type: (script_type)
+      value: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value)))
+    (legacy_script_declaration
+      type: (script_type)
+      value: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))
+      comment: (comment))
+    (legacy_script_declaration
+      type: (script_type)
+      value: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value)))
+    (legacy_script_declaration
+      type: (script_type)
+      value: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value)))
+    (legacy_script_declaration
+      type: (script_type)
+      value: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value)))
+    (legacy_script_declaration
+      type: (script_type)
+      value: (positional_value
+        value: (double_quoted_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value)))
+    (legacy_script_declaration
+      type: (script_type)
+      value: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (double_quoted_value)))))
+
+====================================================
 rules expose kinds arguments policies and options
 ====================================================
 
@@ -457,6 +532,48 @@ SSID:MyHome dns-server=8.8.8.8,encrypted-dns-server=https://1.1.1.1/
         key: (parameter_key)
         value: (double_quoted_value))
       comment: (comment))))
+
+========================================================
+malformed legacy scripts recover before later declarations
+========================================================
+
+[Script]
+http-response ^https://broken.example
+modern = type=http-response,script-path=modern.js
+http-request
+cron "0 8 * * *" script-path=cron.js
+[General]
+recovered = true
+
+---
+
+(source_file
+  (script_section
+    (section_header)
+    (ERROR
+      (script_type))
+    (named_declaration
+      name: (declaration_name)
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value)))
+    (ERROR
+      (script_type))
+    (legacy_script_declaration
+      type: (script_type)
+      value: (positional_value
+        value: (double_quoted_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))))
+  (general_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value))))
 
 ====================================================
 unknown extension lines do not interrupt known syntax

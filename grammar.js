@@ -58,15 +58,22 @@ const assignmentSectionBodyItem = ($) =>
     alias($._non_assignment_line, $.unknown_line),
   );
 
-const namedDeclarationSectionBodyItem = ($) =>
+const namedDeclarationSectionBodyItem = ($, additionalItems = []) =>
   choice(
     directiveBodyItem($),
+    ...additionalItems,
     alias($._conditional_named_declaration, $.conditional_statement),
     prec.dynamic(1, $.named_declaration),
     prec.dynamic(3, $._malformed_named_declaration_statement),
     alias(prec.dynamic(-1, $._unknown_declaration_line), $.unknown_line),
     alias($._non_assignment_line, $.unknown_line),
   );
+
+const scriptSectionBodyItem = ($) =>
+  namedDeclarationSectionBodyItem($, [
+    alias($._conditional_legacy_script_declaration, $.conditional_statement),
+    prec.dynamic(2, $.legacy_script_declaration),
+  ]);
 
 const ruleSectionBodyItem = ($) =>
   choice(
@@ -237,7 +244,7 @@ export default grammar({
         ($) => $.whitespace_statement,
       ),
     ),
-    script_section: fixedSection("[Script]", namedDeclarationSectionBodyItem),
+    script_section: fixedSection("[Script]", scriptSectionBodyItem),
     panel_section: fixedSection("[Panel]", namedDeclarationSectionBodyItem),
     ponte_section: fixedSection("[Ponte]", assignmentSectionBodyItem),
     port_forwarding_section: fixedSection(
@@ -300,6 +307,23 @@ export default grammar({
       ),
     _named_declaration_item: ($) =>
       choice(field("parameter", $.named_parameter), field("argument", $.positional_value)),
+
+    legacy_script_declaration: statementRule(($) => $._legacy_script_declaration),
+    _conditional_legacy_script_declaration: conditionalStatementRule(
+      ($) => $._legacy_script_declaration,
+      ($) => $.legacy_script_declaration,
+    ),
+    _legacy_script_declaration: ($) =>
+      seq(
+        field("type", $.script_type),
+        $._required_whitespace,
+        leadingWhitespaceValueField($, "value"),
+        $._required_whitespace,
+        field("parameter", $.named_parameter),
+        repeat(seq(alias($._comma_separator, ","), field("parameter", $.named_parameter))),
+      ),
+    script_type: (_) =>
+      choice("http-request", "http-response", "rule", "dns", "event", "cron", "generic"),
 
     rule: statementRule(($) => $._rule),
     _conditional_rule: conditionalStatementRule(
