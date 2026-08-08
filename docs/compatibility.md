@@ -64,6 +64,7 @@ The build 11990 revalidation produced the following expected results:
 | `documented/large-rule-profile.conf` | Accepted | The synthetic 10,001-rule profile is accepted. |
 | `surge-validated/repeated-sections.conf` | Accepted | Repeated sections are accepted and remain separate parser nodes. |
 | `surge-validated/unknown-extensions.conf` | Accepted | An unknown key and section are accepted by this build and preserved by the parser. |
+| `surge-validated/dynamic-prefix-unknown-sections.conf` | Accepted | Unknown sections whose names begin with `Ruleset`, `WireGuard`, or `Tailscale` are accepted by this build and preserved as unknown sections rather than partially matching the named dynamic families. The official Profile Format separately guarantees that content in unrecognized sections is preserved without errors. |
 | `surge-validated/structural-case-rejected.conf` | Rejected | Lowercase `[rule]` does not act as the structural `[Rule]` section. The parser preserves it as an unknown section. |
 | `surge-validated/utf8-bom.conf` | Accepted | A UTF-8 BOM is accepted. |
 | `surge-validated/crlf.conf` | Accepted | CRLF line endings are accepted. |

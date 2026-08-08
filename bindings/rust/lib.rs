@@ -357,28 +357,149 @@ mod tests {
     }
 
     #[test]
-    fn dynamic_section_name_has_an_exact_source_range() {
-        let source = "[Ruleset   Streaming Media  ]";
+    fn dynamic_family_prefix_collisions_preserve_exact_unknown_section_ranges() {
+        let source = "[RulesetX]\nopaque = ruleset-x\n\
+[Ruleset-Extension]\nopaque ruleset extension\n\
+[WireGuardX]\nopaque = wireguard-x\n\
+[TailscaleX]\nopaque tailscale-x\n\
+[Ruleset]\nopaque bare ruleset\n\
+[WireGuard]\nopaque = bare wireguard\n\
+[Tailscale]\nopaque bare tailscale\n\
+[Ruleset   ]\nopaque spaced ruleset\n\
+[WireGuard   ]\nopaque spaced wireguard\n\
+[Tailscale   ]\nopaque spaced tailscale\n\
+[General]\nrecovered = true\n";
+        let expected_unknown_sections = [
+            ("RulesetX", "[RulesetX]\nopaque = ruleset-x"),
+            (
+                "Ruleset-Extension",
+                "[Ruleset-Extension]\nopaque ruleset extension",
+            ),
+            ("WireGuardX", "[WireGuardX]\nopaque = wireguard-x"),
+            ("TailscaleX", "[TailscaleX]\nopaque tailscale-x"),
+            ("Ruleset", "[Ruleset]\nopaque bare ruleset"),
+            ("WireGuard", "[WireGuard]\nopaque = bare wireguard"),
+            ("Tailscale", "[Tailscale]\nopaque bare tailscale"),
+            ("Ruleset", "[Ruleset   ]\nopaque spaced ruleset"),
+            ("WireGuard", "[WireGuard   ]\nopaque spaced wireguard"),
+            ("Tailscale", "[Tailscale   ]\nopaque spaced tailscale"),
+        ];
         let tree = parser()
             .parse(source, None)
             .expect("parser returned no tree");
-        let section = tree
-            .root_node()
-            .named_child(0)
-            .expect("missing Ruleset section");
-        let header = section.named_child(0).expect("missing section header");
-        let name = header
-            .child_by_field_name("name")
-            .expect("missing dynamic section name");
-        let expected_start = source.find("Streaming").expect("missing expected name");
-        let expected_end = expected_start + "Streaming Media".len();
+        let root = tree.root_node();
 
-        assert_eq!(name.byte_range(), expected_start..expected_end);
+        for (index, (expected_name, expected_source)) in
+            expected_unknown_sections.into_iter().enumerate()
+        {
+            let section = root
+                .named_child(u32::try_from(index).expect("section index exceeds u32"))
+                .expect("missing unknown section");
+            let header = section.named_child(0).expect("missing section header");
+            let name = header
+                .child_by_field_name("name")
+                .expect("missing unknown section name");
+
+            let expected_header = expected_source
+                .lines()
+                .next()
+                .expect("unknown section source has no header");
+
+            assert_eq!(section.kind(), "unknown_section");
+            assert_eq!(&source[section.byte_range()], expected_source);
+            assert_eq!(&source[header.byte_range()], expected_header);
+            assert_eq!(&source[name.byte_range()], expected_name);
+            assert!(!section.has_error());
+        }
+
+        let general_section = root
+            .named_child(10)
+            .expect("missing recovered General section");
+        assert_eq!(general_section.kind(), "general_section");
         assert_eq!(
-            &source[name.byte_range()],
-            "Streaming Media",
-            "section name should exclude surrounding whitespace"
+            &source[general_section.byte_range()],
+            "[General]\nrecovered = true"
         );
+        assert!(!root.has_error());
+    }
+
+    #[test]
+    fn valid_dynamic_section_names_have_exact_source_ranges() {
+        let source = "[Ruleset   Streaming Media  ]\n\
+[WireGuard   office tunnel  ]\n\
+[Tailscale   personal mesh  ]";
+        let expected_sections = [
+            (
+                "ruleset_section",
+                "[Ruleset   Streaming Media  ]",
+                "Streaming Media",
+            ),
+            (
+                "wireguard_section",
+                "[WireGuard   office tunnel  ]",
+                "office tunnel",
+            ),
+            (
+                "tailscale_section",
+                "[Tailscale   personal mesh  ]",
+                "personal mesh",
+            ),
+        ];
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let root = tree.root_node();
+
+        for (index, (expected_kind, expected_header, expected_name)) in
+            expected_sections.into_iter().enumerate()
+        {
+            let section = root
+                .named_child(u32::try_from(index).expect("section index exceeds u32"))
+                .expect("missing dynamic section");
+            let header = section.named_child(0).expect("missing section header");
+            let name = header
+                .child_by_field_name("name")
+                .expect("missing dynamic section name");
+
+            assert_eq!(section.kind(), expected_kind);
+            assert_eq!(&source[section.byte_range()], expected_header);
+            assert_eq!(&source[header.byte_range()], expected_header);
+            assert_eq!(&source[name.byte_range()], expected_name);
+            assert!(!section.has_error());
+        }
+
+        assert!(!root.has_error());
+    }
+
+    #[test]
+    fn malformed_dynamic_header_recovers_at_a_statement_and_following_section() {
+        let source = "[Ruleset Broken\nDOMAIN,valid.example\n[Rule]\nFINAL,DIRECT";
+        let tree = parser()
+            .parse(source, None)
+            .expect("parser returned no tree");
+        let root = tree.root_node();
+        let ruleset_section = root
+            .named_child(0)
+            .expect("missing malformed Ruleset section");
+        let malformed_header = ruleset_section
+            .named_child(0)
+            .expect("missing malformed Ruleset header");
+        let recovered_statement = ruleset_section
+            .named_child(1)
+            .expect("missing recovered Ruleset statement");
+        let rule_section = root.named_child(1).expect("missing recovered Rule section");
+
+        assert!(malformed_header.has_error());
+        assert_eq!(recovered_statement.kind(), "ordered_comma_statement");
+        assert_eq!(
+            &source[recovered_statement.byte_range()],
+            "DOMAIN,valid.example"
+        );
+        assert!(!recovered_statement.has_error());
+        assert_eq!(rule_section.kind(), "rule_section");
+        assert_eq!(&source[rule_section.byte_range()], "[Rule]\nFINAL,DIRECT");
+        assert!(!rule_section.has_error());
+        assert!(root.has_error());
     }
 
     #[test]

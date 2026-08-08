@@ -8,6 +8,7 @@ documented/directives.conf	clean	not-applicable	managed_config_directive,forbidd
 documented/large-rule-profile.conf	clean	accepted	rule_section	https://manual.nssurge.com/rules/overview.html
 surge-validated/repeated-sections.conf	clean	accepted	general_section,general_section,rule_section	surge-cli:repeated-section-acceptance
 surge-validated/unknown-extensions.conf	clean	accepted	general_section,unknown_section,rule_section	https://manual.nssurge.com/profile/format.html
+surge-validated/dynamic-prefix-unknown-sections.conf	clean	accepted	general_section,unknown_section,unknown_section,unknown_section,unknown_section,rule_section	https://manual.nssurge.com/profile/format.html,surge-cli:dynamic-prefix-unknown-section-acceptance
 surge-validated/structural-case-rejected.conf	clean	rejected	general_section,unknown_section	surge-cli:case-sensitive-section-dispatch
 surge-validated/utf8-bom.conf	clean	accepted	general_section,rule_section	surge-cli:utf8-bom-acceptance
 surge-validated/crlf.conf	clean	accepted	general_section,rule_section	surge-cli:crlf-acceptance

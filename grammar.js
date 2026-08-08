@@ -120,8 +120,8 @@ const fixedSection = (header, bodyItem) =>
 const namedSection = (header, bodyItem) =>
   section(($) => alias(header($), $.section_header), bodyItem);
 
-const dynamicHeader = (prefix) => ($) =>
-  seq(prefix, $._header_separator, field("name", $.section_name), "]");
+const dynamicHeader = (prefix, prefixAlias) => ($) =>
+  seq(alias(prefix($), prefixAlias), $._header_separator, field("name", $.section_name), "]");
 
 const sectionRules = ($) => [
   $.general_section,
@@ -157,6 +157,9 @@ export default grammar({
 
   externals: ($) => [
     $._physical_line_end,
+    $._wireguard_section_prefix,
+    $._tailscale_section_prefix,
+    $._ruleset_section_prefix,
     $._ruleset_logical_line_start,
     $._incomplete_rule_line,
     $._incomplete_ruleset_line,
@@ -265,9 +268,9 @@ export default grammar({
     ruleset_section: namedSection(($) => $._ruleset_section_header, rulesetSectionBodyItem),
     unknown_section: namedSection(($) => $._unknown_section_header),
 
-    _wireguard_section_header: dynamicHeader("[WireGuard"),
-    _tailscale_section_header: dynamicHeader("[Tailscale"),
-    _ruleset_section_header: dynamicHeader("[Ruleset"),
+    _wireguard_section_header: dynamicHeader(($) => $._wireguard_section_prefix, "[WireGuard"),
+    _tailscale_section_header: dynamicHeader(($) => $._tailscale_section_prefix, "[Tailscale"),
+    _ruleset_section_header: dynamicHeader(($) => $._ruleset_section_prefix, "[Ruleset"),
     _unknown_section_header: ($) => seq("[", field("name", $.section_name), "]"),
 
     assignment: statementRule(($) => $._assignment),

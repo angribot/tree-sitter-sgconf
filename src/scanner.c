@@ -5,10 +5,14 @@
 #include <string.h>
 
 // External boundaries keep recovery on one physical line, distinguish
-// recognizable incomplete statements from unknown extensions, and enable
-// Ruleset logical syntax only for policy-free or unterminated forms.
+// recognizable incomplete statements from unknown extensions, dispatch named
+// section families, and enable Ruleset logical syntax only for policy-free or
+// unterminated forms.
 enum TokenType {
   PHYSICAL_LINE_END,
+  WIREGUARD_SECTION_PREFIX,
+  TAILSCALE_SECTION_PREFIX,
+  RULESET_SECTION_PREFIX,
   RULESET_LOGICAL_LINE_START,
   INCOMPLETE_RULE_LINE,
   INCOMPLETE_RULESET_LINE,
@@ -72,8 +76,66 @@ static bool scan_word(TSLexer *lexer, const char *word) {
   return true;
 }
 
-static bool scan_leading_bracket_value_chunk(TSLexer *lexer) {
-  if (lexer->lookahead != '[') {
+static bool scan_dynamic_section_name_start(TSLexer *lexer) {
+  if (!is_horizontal_whitespace(lexer->lookahead)) {
+    return false;
+  }
+
+  lexer->mark_end(lexer);
+  while (is_horizontal_whitespace(lexer->lookahead)) {
+    lexer->advance(lexer, false);
+  }
+  return lexer->lookahead != 0 && lexer->lookahead != '\r' &&
+         lexer->lookahead != '\n' && lexer->lookahead != ']';
+}
+
+static bool scan_dynamic_section_prefix(TSLexer *lexer,
+                                        const bool *valid_symbols,
+                                        enum TokenType prefix_type,
+                                        const char *prefix,
+                                        enum TokenType *token_type) {
+  if (!valid_symbols[prefix_type] || !scan_literal(lexer, prefix) ||
+      !scan_dynamic_section_name_start(lexer)) {
+    return false;
+  }
+
+  *token_type = prefix_type;
+  return true;
+}
+
+static bool scan_bracket_token(TSLexer *lexer, const bool *valid_symbols,
+                               enum TokenType *token_type) {
+  if (!scan_character(lexer, '[')) {
+    return false;
+  }
+
+  switch (lexer->lookahead) {
+  case 'W':
+    if (scan_dynamic_section_prefix(lexer, valid_symbols,
+                                    WIREGUARD_SECTION_PREFIX, "WireGuard",
+                                    token_type)) {
+      return true;
+    }
+    break;
+  case 'T':
+    if (scan_dynamic_section_prefix(lexer, valid_symbols,
+                                    TAILSCALE_SECTION_PREFIX, "Tailscale",
+                                    token_type)) {
+      return true;
+    }
+    break;
+  case 'R':
+    if (scan_dynamic_section_prefix(lexer, valid_symbols,
+                                    RULESET_SECTION_PREFIX, "Ruleset",
+                                    token_type)) {
+      return true;
+    }
+    break;
+  default:
+    break;
+  }
+
+  if (!valid_symbols[LEADING_BRACKET_VALUE_CHUNK]) {
     return false;
   }
 
@@ -108,6 +170,7 @@ static bool scan_leading_bracket_value_chunk(TSLexer *lexer) {
     }
   }
 
+  *token_type = LEADING_BRACKET_VALUE_CHUNK;
   return !found_closing_bracket ||
          has_non_whitespace_after_closing_bracket;
 }
@@ -661,9 +724,10 @@ bool tree_sitter_sgconf_external_scanner_scan(void *payload, TSLexer *lexer,
     return true;
   }
 
-  if (valid_symbols[LEADING_BRACKET_VALUE_CHUNK] &&
-      scan_leading_bracket_value_chunk(lexer)) {
-    lexer->result_symbol = LEADING_BRACKET_VALUE_CHUNK;
+  enum TokenType bracket_type;
+  if (lexer->lookahead == '[' &&
+      scan_bracket_token(lexer, valid_symbols, &bracket_type)) {
+    lexer->result_symbol = bracket_type;
     return true;
   }
 
