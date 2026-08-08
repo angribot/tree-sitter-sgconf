@@ -469,6 +469,18 @@ beta = two
 [URL Rewrite]
 future rewrite "quoted extension payload" remains opaque
 ^http://old.example https://new.example
+[Ruleset Future]
+future-ruleset-extension
+DOMAIN,valid.example
+[Map Local]
+future-map payload
+^https://valid.example data={}
+[SSID Setting]
+future-ssid payload
+SSID:Valid suspend=true
+[Port Forwarding]
+future-port target extra
+127.0.0.1:1 localhost:1
 [Rule]
 future-rule-extension
 FINAL,DIRECT
@@ -489,6 +501,40 @@ FINAL,DIRECT
     (section_header)
     (unknown_line)
     (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))))
+  (ruleset_section
+    (section_header
+      name: (section_name))
+    (unknown_line)
+    (ordered_comma_statement
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value))))
+  (map_local_section
+    (section_header)
+    (unknown_line)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))))
+  (ssid_setting_section
+    (section_header)
+    (unknown_line)
+    (whitespace_statement
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))))
+  (port_forwarding_section
+    (section_header)
+    (unknown_line)
+    (whitespace_statement
       argument: (positional_value
         value: (bare_value))
       argument: (positional_value
@@ -528,7 +574,7 @@ FINAL,DIRECT
       value: (bare_value)))
   (proxy_section
     (section_header)
-    (unknown_line)
+    (ERROR)
     (named_declaration
       name: (declaration_name)
       argument: (positional_value
@@ -581,29 +627,152 @@ URL-REGEX,^https://example.com/path?x=y$
       argument: (positional_value
         value: (bare_value)))))
 
-====================================================
-malformed line families remain local and recoverable
-====================================================
+============================================================
+recognizable incomplete statements expose localized errors
+============================================================
 
 [Rule]
 DOMAIN-SUFFIX,example.com
-FINAL,DIRECT
+DOMAIN,valid.example,DIRECT
 [Ruleset Recovery]
 DOMAIN-SUFFIX,
-DOMAIN-SUFFIX,example.com
+DOMAIN,valid.example
 [URL Rewrite]
 pattern-only
 ^http://old.example https://new.example
+[Header Rewrite]
+http-response pattern-only
+http-response ^https://valid.example header-del X-Test
+[Body Rewrite]
+http-response pattern-only
+http-response ^https://valid.example {}
+[Map Local]
+pattern-only
+^https://valid.example data={}
 [SSID Setting]
 SSID:MissingParameters
-SSID:MyHome suspend=true
+SSID:Valid suspend=true
+[Port Forwarding]
+127.0.0.1:1
+127.0.0.1:1 localhost:1
+[General]
+recovered = true
 
 ---
 
 (source_file
   (rule_section
     (section_header)
-    (unknown_line)
+    (ERROR)
+    (rule
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value))
+      policy: (policy
+        value: (bare_value))))
+  (ruleset_section
+    (section_header
+      name: (section_name))
+    (ERROR)
+    (ordered_comma_statement
+      kind: (rule_kind)
+      argument: (positional_value
+        value: (bare_value))))
+  (url_rewrite_section
+    (section_header)
+    (ERROR)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))))
+  (header_rewrite_section
+    (section_header)
+    (ERROR)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))))
+  (body_rewrite_section
+    (section_header)
+    (ERROR)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))
+      body: (positional_value
+        value: (bare_value))))
+  (map_local_section
+    (section_header)
+    (ERROR)
+    (rewrite
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))))
+  (ssid_setting_section
+    (section_header)
+    (ERROR)
+    (whitespace_statement
+      argument: (positional_value
+        value: (bare_value))
+      parameter: (named_parameter
+        key: (parameter_key)
+        value: (bare_value))))
+  (port_forwarding_section
+    (section_header)
+    (ERROR)
+    (whitespace_statement
+      argument: (positional_value
+        value: (bare_value))
+      argument: (positional_value
+        value: (bare_value))))
+  (general_section
+    (section_header)
+    (assignment
+      key: (key)
+      value: (bare_value))))
+
+============================================================
+comma-delimited known forms reject empty required slots
+============================================================
+
+[Proxy]
+broken = http,,password=secret
+valid = direct
+[Rule]
+AN,(matcher)
+NO,(matcher)
+DOMAIN,,DIRECT
+FINAL,DIRECT
+[Ruleset Empty Slots]
+DOMAIN,,extended-matching
+DOMAIN,valid.example
+[General]
+recovered = true
+
+---
+
+(source_file
+  (proxy_section
+    (section_header)
+    (ERROR)
+    (named_declaration
+      name: (declaration_name)
+      argument: (positional_value
+        value: (bare_value))))
+  (rule_section
+    (section_header)
+    (ERROR)
+    (ERROR)
+    (ERROR)
     (rule
       kind: (rule_kind)
       policy: (policy
@@ -611,25 +780,13 @@ SSID:MyHome suspend=true
   (ruleset_section
     (section_header
       name: (section_name))
-    (unknown_line)
+    (ERROR)
     (ordered_comma_statement
       kind: (rule_kind)
       argument: (positional_value
         value: (bare_value))))
-  (url_rewrite_section
+  (general_section
     (section_header)
-    (unknown_line)
-    (rewrite
-      argument: (positional_value
-        value: (bare_value))
-      argument: (positional_value
-        value: (bare_value))))
-  (ssid_setting_section
-    (section_header)
-    (unknown_line)
-    (whitespace_statement
-      argument: (positional_value
-        value: (bare_value))
-      parameter: (named_parameter
-        key: (parameter_key)
-        value: (bare_value)))))
+    (assignment
+      key: (key)
+      value: (bare_value))))

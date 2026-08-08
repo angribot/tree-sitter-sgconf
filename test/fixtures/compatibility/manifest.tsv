@@ -12,6 +12,7 @@ surge-validated/utf8-bom.conf	clean	accepted	general_section,rule_section	surge-
 surge-validated/crlf.conf	clean	accepted	general_section,rule_section	surge-cli:crlf-acceptance
 surge-validated/no-final-newline.conf	clean	accepted	general_section,rule_section	surge-cli:missing-final-newline-acceptance
 surge-validated/bracketed-url-rewrite.conf	clean	accepted	url_rewrite_section,rule_section	https://manual.nssurge.com/http/url-rewrite.html,surge-cli:bracketed-regex-acceptance
+surge-validated/incomplete-rule-rejected.conf	localized-error	rejected	rule_section,general_section	surge-cli:incomplete-rule-rejection
 recovery/future-syntax.conf	clean	not-applicable	directive,unknown_section,general_section,rule_section	recovery:unknown-extension-preservation
 recovery/malformed-logical-rule.conf	localized-error	not-applicable	rule_section,general_section	recovery:physical-line-boundary
 recovery/malformed-header.conf	localized-error	not-applicable	general_section,ERROR,rule_section,general_section	recovery:section-boundary

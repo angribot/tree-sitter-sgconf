@@ -13,6 +13,8 @@ const statementWithComment = ($, statement) => seq(statement, inlineComment($));
 
 const statementRule = (statement) => ($) => statementWithComment($, statement($));
 
+const malformedStatementRule = (line) => ($) => seq(line($), $._statement_error_sentinel);
+
 const conditionalStatement = ($, statement, namedStatement) =>
   choice(
     seq(
@@ -61,6 +63,7 @@ const namedDeclarationSectionBodyItem = ($) =>
     directiveBodyItem($),
     alias($._conditional_named_declaration, $.conditional_statement),
     prec.dynamic(1, $.named_declaration),
+    prec.dynamic(3, $._malformed_named_declaration_statement),
     alias(prec.dynamic(-1, $._unknown_declaration_line), $.unknown_line),
     alias($._non_assignment_line, $.unknown_line),
   );
@@ -73,6 +76,7 @@ const ruleSectionBodyItem = ($) =>
     prec.dynamic(2, $.logical_rule),
     prec.dynamic(1, $.rule),
     prec.dynamic(3, $.malformed_logical_rule),
+    prec.dynamic(3, $._malformed_rule_statement),
     alias(prec.dynamic(-2, $._unknown_comma_line), $.unknown_line),
   );
 
@@ -84,16 +88,19 @@ const rulesetSectionBodyItem = ($) =>
     prec.dynamic(2, $.ruleset_logical_rule),
     prec.dynamic(1, $.ordered_comma_statement),
     prec.dynamic(3, alias($._ruleset_malformed_logical_rule, $.malformed_logical_rule)),
+    prec.dynamic(3, $._malformed_ordered_comma_statement),
     alias(prec.dynamic(-2, $._unknown_comma_line), $.unknown_line),
   );
 
-const structuredSectionBodyItem = (completeRule, conditionalRule, namedStatement) => ($) =>
-  choice(
-    directiveBodyItem($),
-    alias(conditionalRule($), $.conditional_statement),
-    alias(prec.dynamic(1, completeRule($)), namedStatement($)),
-    alias(prec.dynamic(-1, $._whitespace_unknown_line), $.unknown_line),
-  );
+const structuredSectionBodyItem =
+  (completeRule, conditionalRule, malformedRule, namedStatement) => ($) =>
+    choice(
+      directiveBodyItem($),
+      alias(conditionalRule($), $.conditional_statement),
+      alias(prec.dynamic(1, completeRule($)), namedStatement($)),
+      prec.dynamic(3, malformedRule($)),
+      alias(prec.dynamic(-1, $._whitespace_unknown_line), $.unknown_line),
+    );
 
 const section =
   (header, bodyItem = unknownSectionBodyItem) =>
@@ -142,8 +149,13 @@ export default grammar({
   extras: (_) => [/[ \t]/],
 
   externals: ($) => [
-    $._logical_line_end,
+    $._physical_line_end,
     $._ruleset_logical_line_start,
+    $._incomplete_rule_line,
+    $._incomplete_ruleset_line,
+    $._incomplete_named_declaration_line,
+    $._incomplete_two_value_whitespace_line,
+    $._incomplete_three_value_whitespace_line,
     $._requirement_comparison_operator,
     $._requirement_or_operator,
     $._requirement_and_operator,
@@ -183,6 +195,7 @@ export default grammar({
       structuredSectionBodyItem(
         ($) => $._url_rewrite_statement,
         ($) => $._conditional_url_rewrite,
+        ($) => $._malformed_url_rewrite_statement,
         ($) => $.rewrite,
       ),
     ),
@@ -191,6 +204,7 @@ export default grammar({
       structuredSectionBodyItem(
         ($) => $._header_rewrite_statement,
         ($) => $._conditional_header_rewrite,
+        ($) => $._malformed_header_rewrite_statement,
         ($) => $.rewrite,
       ),
     ),
@@ -199,6 +213,7 @@ export default grammar({
       structuredSectionBodyItem(
         ($) => $._body_rewrite_statement,
         ($) => $._conditional_body_rewrite,
+        ($) => $._malformed_body_rewrite_statement,
         ($) => $.rewrite,
       ),
     ),
@@ -207,6 +222,7 @@ export default grammar({
       structuredSectionBodyItem(
         ($) => $._map_local_statement,
         ($) => $._conditional_map_local,
+        ($) => $._malformed_map_local_statement,
         ($) => $.rewrite,
       ),
     ),
@@ -217,6 +233,7 @@ export default grammar({
       structuredSectionBodyItem(
         ($) => $._ssid_setting_statement,
         ($) => $._conditional_ssid_setting,
+        ($) => $._malformed_ssid_setting_statement,
         ($) => $.whitespace_statement,
       ),
     ),
@@ -228,6 +245,7 @@ export default grammar({
       structuredSectionBodyItem(
         ($) => $._port_forwarding_statement,
         ($) => $._conditional_port_forwarding,
+        ($) => $._malformed_port_forwarding_statement,
         ($) => $.whitespace_statement,
       ),
     ),
@@ -266,6 +284,9 @@ export default grammar({
     merge_operator: (_) => token(prec(6, choice("%APPEND%", "%INSERT%"))),
 
     named_declaration: statementRule(($) => $._named_declaration),
+    _malformed_named_declaration_statement: malformedStatementRule(
+      ($) => $._incomplete_named_declaration_line,
+    ),
     _conditional_named_declaration: conditionalStatementRule(
       ($) => $._named_declaration,
       ($) => $.named_declaration,
@@ -285,6 +306,7 @@ export default grammar({
       ($) => $._rule,
       ($) => $.rule,
     ),
+    _malformed_rule_statement: malformedStatementRule(($) => $._incomplete_rule_line),
     _rule: ($) =>
       choice(
         prec(
@@ -361,8 +383,8 @@ export default grammar({
         "(",
         repeat(seq(field("operand", $.logical_rule_operand), $._comma_separator)),
         field("operand", $._unterminated_logical_rule_operand),
-        $._logical_line_end,
-        $._logical_error_sentinel,
+        $._physical_line_end,
+        $._statement_error_sentinel,
       ),
     _unterminated_logical_rule_operand: ($) =>
       seq("(", field("expression", alias($._unterminated_rule_predicate, $.rule_predicate))),
@@ -399,15 +421,16 @@ export default grammar({
         ")",
       ),
     _logical_value_chunk: (_) => token(prec(-1, /(?:\\[()]|[^%,() \t\r\n"'])+/)),
-    // The scanner emits the preceding zero-width boundary; this required,
-    // unlexable token makes the localized malformed node carry a MISSING error.
-    _logical_error_sentinel: (_) => "\0",
+    // A required unlexable token makes a localized malformed node carry a
+    // MISSING error. Recursive logical rules first use their scanner boundary.
+    _statement_error_sentinel: (_) => "\0",
 
     ordered_comma_statement: statementRule(($) => $._ordered_comma_statement),
     _conditional_ordered_comma_statement: conditionalStatementRule(
       ($) => $._ordered_comma_statement,
       ($) => $.ordered_comma_statement,
     ),
+    _malformed_ordered_comma_statement: malformedStatementRule(($) => $._incomplete_ruleset_line),
     _ordered_comma_statement: ($) =>
       seq(field("kind", $.rule_kind), repeat1(seq($._comma_separator, $._ordered_comma_item))),
     _ordered_comma_item: ($) =>
@@ -417,6 +440,18 @@ export default grammar({
     _header_rewrite_statement: statementRule(($) => $._header_rewrite),
     _body_rewrite_statement: statementRule(($) => $._body_rewrite),
     _map_local_statement: statementRule(($) => $._map_local),
+    _malformed_url_rewrite_statement: malformedStatementRule(
+      ($) => $._incomplete_two_value_whitespace_line,
+    ),
+    _malformed_header_rewrite_statement: malformedStatementRule(
+      ($) => $._incomplete_three_value_whitespace_line,
+    ),
+    _malformed_body_rewrite_statement: malformedStatementRule(
+      ($) => $._incomplete_three_value_whitespace_line,
+    ),
+    _malformed_map_local_statement: malformedStatementRule(
+      ($) => $._incomplete_two_value_whitespace_line,
+    ),
     _conditional_url_rewrite: conditionalStatementRule(
       ($) => $._url_rewrite,
       ($) => $.rewrite,
@@ -467,6 +502,12 @@ export default grammar({
 
     _ssid_setting_statement: statementRule(($) => $._ssid_setting),
     _port_forwarding_statement: statementRule(($) => $._port_forwarding),
+    _malformed_ssid_setting_statement: malformedStatementRule(
+      ($) => $._incomplete_two_value_whitespace_line,
+    ),
+    _malformed_port_forwarding_statement: malformedStatementRule(
+      ($) => $._incomplete_two_value_whitespace_line,
+    ),
     _conditional_ssid_setting: conditionalStatementRule(
       ($) => $._ssid_setting,
       ($) => $.whitespace_statement,
