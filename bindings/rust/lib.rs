@@ -186,20 +186,98 @@ mod tests {
     }
 
     #[test]
-    fn malformed_whitespace_statement_does_not_consume_following_section() {
-        let source = "[URL Rewrite]\npattern-only\n[General]\ndisplay-name = 東京\n";
+    fn malformed_statement_families_have_local_errors_and_exact_recovery_ranges() {
+        let source = "[Proxy]\nbroken = http,\nvalid = direct\n\
+[Rule]\nDOMAIN-SUFFIX,example.com\nDOMAIN,valid.example,DIRECT\n\
+[Ruleset Recovery]\nDOMAIN-SUFFIX,\nDOMAIN,valid.example\n\
+[URL Rewrite]\npattern-only\n^http://old.example https://new.example\n\
+[Header Rewrite]\nhttp-response pattern-only\nhttp-response ^https://valid.example header-del X-Test\n\
+[Body Rewrite]\nhttp-response pattern-only\nhttp-response ^https://valid.example {}\n\
+[Map Local]\npattern-only\n^https://valid.example data={}\n\
+[SSID Setting]\nSSID:MissingParameters\nSSID:Valid suspend=true\n\
+[Port Forwarding]\n127.0.0.1:1\n127.0.0.1:1 localhost:1\n\
+[General]\nrecovered = true\n";
         let tree = parser()
             .parse(source, None)
             .expect("parser returned no tree");
         let root = tree.root_node();
-        let general_section = root
-            .named_child(1)
-            .expect("missing recovered General section");
+        let expectations = [
+            ("named_declaration", "broken = http,", "valid = direct"),
+            (
+                "rule",
+                "DOMAIN-SUFFIX,example.com",
+                "DOMAIN,valid.example,DIRECT",
+            ),
+            (
+                "ordered_comma_statement",
+                "DOMAIN-SUFFIX,",
+                "DOMAIN,valid.example",
+            ),
+            (
+                "rewrite",
+                "pattern-only",
+                "^http://old.example https://new.example",
+            ),
+            (
+                "rewrite",
+                "http-response pattern-only",
+                "http-response ^https://valid.example header-del X-Test",
+            ),
+            (
+                "rewrite",
+                "http-response pattern-only",
+                "http-response ^https://valid.example {}",
+            ),
+            ("rewrite", "pattern-only", "^https://valid.example data={}"),
+            (
+                "whitespace_statement",
+                "SSID:MissingParameters",
+                "SSID:Valid suspend=true",
+            ),
+            (
+                "whitespace_statement",
+                "127.0.0.1:1",
+                "127.0.0.1:1 localhost:1",
+            ),
+        ];
 
+        assert!(root.has_error());
+        for (section_index, (recovered_kind, malformed_source, recovered_source)) in
+            expectations.into_iter().enumerate()
+        {
+            let section_index =
+                u32::try_from(section_index).expect("structured section index exceeds u32");
+            let section = root
+                .named_child(section_index)
+                .expect("missing structured section");
+            let malformed = section.named_child(1).expect("missing malformed statement");
+            let recovered = section.named_child(2).expect("missing recovered statement");
+
+            let section_range = section.byte_range();
+            let malformed_line_start = section_range.start
+                + source[section_range]
+                    .find(malformed_source)
+                    .expect("missing malformed source line");
+            let malformed_line_end = malformed_line_start + malformed_source.len();
+
+            assert_eq!(malformed.kind(), "ERROR");
+            assert!(malformed.start_byte() >= malformed_line_start);
+            assert!(malformed.end_byte() <= malformed_line_end);
+            assert!(malformed.has_error());
+            assert_eq!(recovered.kind(), recovered_kind);
+            assert_eq!(&source[recovered.byte_range()], recovered_source);
+            assert!(!recovered.has_error());
+        }
+
+        let general_section_index =
+            u32::try_from(expectations.len()).expect("General section index exceeds u32");
+        let general_section = root
+            .named_child(general_section_index)
+            .expect("missing recovered General section");
         assert_eq!(general_section.kind(), "general_section");
         assert_eq!(
             &source[general_section.byte_range()],
-            "[General]\ndisplay-name = 東京"
+            "[General]\nrecovered = true"
         );
         assert!(!general_section.has_error());
     }

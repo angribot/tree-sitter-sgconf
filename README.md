@@ -78,7 +78,7 @@ A `.conf` document containing only generic headers such as `[General]` may inten
 
 The [Surge manual](https://manual.nssurge.com/llms.txt) is the public syntax authority. Scrubbed local `surge-cli --check` results supplement the manual where executable behavior matters; tests never require Surge or network access.
 
-Named CST nodes and field names are a public compatibility surface. Changes to them require deliberate review because downstream queries and tools may depend on those names. Error recovery is line-bounded where practical so malformed or future syntax does not consume later valid statements or sections. `unknown_section`, `unknown_line`, and generic `directive` nodes preserve extensions without claiming semantic validity.
+Named CST nodes and field names are a public compatibility surface. Changes to them require deliberate review because downstream queries and tools may depend on those names. Error recovery is line-bounded where practical so malformed or future syntax does not consume later valid statements or sections. Recognizable incomplete named declarations, Rule and inline Ruleset entries, rewrite statements, and whitespace-delimited statements produce localized `ERROR` nodes; genuinely unknown shapes remain available through `unknown_section`, `unknown_line`, and generic `directive` nodes without claiming semantic validity.
 
 ## Non-goals
 

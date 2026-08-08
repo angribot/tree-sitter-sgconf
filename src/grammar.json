@@ -337,6 +337,14 @@
                     }
                   },
                   {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_named_declaration_statement"
+                    }
+                  },
+                  {
                     "type": "ALIAS",
                     "content": {
                       "type": "PREC_DYNAMIC",
@@ -420,6 +428,14 @@
                     "content": {
                       "type": "SYMBOL",
                       "name": "named_declaration"
+                    }
+                  },
+                  {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_named_declaration_statement"
                     }
                   },
                   {
@@ -531,6 +547,14 @@
                     "content": {
                       "type": "SYMBOL",
                       "name": "malformed_logical_rule"
+                    }
+                  },
+                  {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_rule_statement"
                     }
                   },
                   {
@@ -685,6 +709,14 @@
                     "value": "rewrite"
                   },
                   {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_url_rewrite_statement"
+                    }
+                  },
+                  {
                     "type": "ALIAS",
                     "content": {
                       "type": "PREC_DYNAMIC",
@@ -765,6 +797,14 @@
                     },
                     "named": true,
                     "value": "rewrite"
+                  },
+                  {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_header_rewrite_statement"
+                    }
                   },
                   {
                     "type": "ALIAS",
@@ -849,6 +889,14 @@
                     "value": "rewrite"
                   },
                   {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_body_rewrite_statement"
+                    }
+                  },
+                  {
                     "type": "ALIAS",
                     "content": {
                       "type": "PREC_DYNAMIC",
@@ -929,6 +977,14 @@
                     },
                     "named": true,
                     "value": "rewrite"
+                  },
+                  {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_map_local_statement"
+                    }
                   },
                   {
                     "type": "ALIAS",
@@ -1077,6 +1133,14 @@
                     }
                   },
                   {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_named_declaration_statement"
+                    }
+                  },
+                  {
                     "type": "ALIAS",
                     "content": {
                       "type": "PREC_DYNAMIC",
@@ -1168,6 +1232,14 @@
                     "value": "whitespace_statement"
                   },
                   {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_ssid_setting_statement"
+                    }
+                  },
+                  {
                     "type": "ALIAS",
                     "content": {
                       "type": "PREC_DYNAMIC",
@@ -1242,6 +1314,14 @@
                     "content": {
                       "type": "SYMBOL",
                       "name": "named_declaration"
+                    }
+                  },
+                  {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_named_declaration_statement"
                     }
                   },
                   {
@@ -1328,6 +1408,14 @@
                     "content": {
                       "type": "SYMBOL",
                       "name": "named_declaration"
+                    }
+                  },
+                  {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_named_declaration_statement"
                     }
                   },
                   {
@@ -1489,6 +1577,14 @@
                     },
                     "named": true,
                     "value": "whitespace_statement"
+                  },
+                  {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_port_forwarding_statement"
+                    }
                   },
                   {
                     "type": "ALIAS",
@@ -2012,6 +2108,14 @@
                     }
                   },
                   {
+                    "type": "PREC_DYNAMIC",
+                    "value": 3,
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "_malformed_ordered_comma_statement"
+                    }
+                  },
+                  {
                     "type": "ALIAS",
                     "content": {
                       "type": "PREC_DYNAMIC",
@@ -2421,6 +2525,19 @@
         }
       ]
     },
+    "_malformed_named_declaration_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_incomplete_named_declaration_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_statement_error_sentinel"
+        }
+      ]
+    },
     "_conditional_named_declaration": {
       "type": "CHOICE",
       "members": [
@@ -2698,6 +2815,19 @@
               }
             }
           ]
+        }
+      ]
+    },
+    "_malformed_rule_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_incomplete_rule_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_statement_error_sentinel"
         }
       ]
     },
@@ -3384,11 +3514,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_logical_line_end"
+          "name": "_physical_line_end"
         },
         {
           "type": "SYMBOL",
-          "name": "_logical_error_sentinel"
+          "name": "_statement_error_sentinel"
         }
       ]
     },
@@ -3594,7 +3724,7 @@
         }
       }
     },
-    "_logical_error_sentinel": {
+    "_statement_error_sentinel": {
       "type": "STRING",
       "value": "\u0000"
     },
@@ -3721,6 +3851,19 @@
               }
             }
           ]
+        }
+      ]
+    },
+    "_malformed_ordered_comma_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_incomplete_ruleset_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_statement_error_sentinel"
         }
       ]
     },
@@ -3891,6 +4034,58 @@
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "_malformed_url_rewrite_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_incomplete_two_value_whitespace_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_statement_error_sentinel"
+        }
+      ]
+    },
+    "_malformed_header_rewrite_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_incomplete_three_value_whitespace_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_statement_error_sentinel"
+        }
+      ]
+    },
+    "_malformed_body_rewrite_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_incomplete_three_value_whitespace_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_statement_error_sentinel"
+        }
+      ]
+    },
+    "_malformed_map_local_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_incomplete_two_value_whitespace_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_statement_error_sentinel"
         }
       ]
     },
@@ -4597,6 +4792,32 @@
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "_malformed_ssid_setting_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_incomplete_two_value_whitespace_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_statement_error_sentinel"
+        }
+      ]
+    },
+    "_malformed_port_forwarding_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_incomplete_two_value_whitespace_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_statement_error_sentinel"
         }
       ]
     },
@@ -7101,11 +7322,31 @@
   "externals": [
     {
       "type": "SYMBOL",
-      "name": "_logical_line_end"
+      "name": "_physical_line_end"
     },
     {
       "type": "SYMBOL",
       "name": "_ruleset_logical_line_start"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_incomplete_rule_line"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_incomplete_ruleset_line"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_incomplete_named_declaration_line"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_incomplete_two_value_whitespace_line"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_incomplete_three_value_whitespace_line"
     },
     {
       "type": "SYMBOL",
