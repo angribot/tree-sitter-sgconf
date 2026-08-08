@@ -1,5 +1,15 @@
-#!name=Highlight module
+#!name=Highlight %hostname% module
 # <- keyword
+#       ^ string
+#                 ^ variable.parameter
+#!desc=Routes %hostname% with fallback %fallback%
+# <- keyword
+#       ^ string
+#              ^ variable.parameter
+#                                       ^ variable.parameter
+#!system=mac
+# <- keyword
+#         ^ constant.builtin
 #!arguments=hostname=service.example&fallback=backup.example
 # <- keyword
 #           ^ variable.parameter
