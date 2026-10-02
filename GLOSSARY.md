@@ -1,6 +1,6 @@
 # Surge Configuration Language
 
-This context defines the language shared by Surge configuration documents and the routing concepts they express.
+This glossary defines the language shared by Surge configuration documents and the routing concepts they express.
 
 ## Language
 
